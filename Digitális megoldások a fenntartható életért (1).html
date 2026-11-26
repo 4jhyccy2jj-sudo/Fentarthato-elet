@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digitális megoldások a fenntartható életért</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f7ec;--ink:#12301f;--muted:#4b6455;--leaf:#2a7a4b;--lime:#c9e86b;--card:#fff;--line:#cfdcc8;--deep:#0d2a1b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1a12;--ink:#e6f1e2;--muted:#9bb5a3;--leaf:#7fd19b;--card:#13261a;--line:#26412d}}
+:root[data-theme="dark"]{--bg:#0b1a12;--ink:#e6f1e2;--muted:#9bb5a3;--leaf:#7fd19b;--card:#13261a;--line:#26412d}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden}
+h1,h2,h3,button,nav,.f{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;padding:calc(.6rem + env(safe-area-inset-top,0px)) 1rem .6rem;background:rgba(13,42,27,.82);backdrop-filter:blur(8px)}
+nav a{color:#e6f1e2;text-decoration:none;font-size:.9rem;padding:.35rem .8rem;border-radius:99px}
+nav a:hover{background:var(--lime);color:#0d2a1b}
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;background:linear-gradient(#0d2a1b,#1d5c3a 60%,#8fd18a);color:#fff;overflow:hidden}
+.hero svg.land{position:absolute;inset:auto 0 0 0;width:100%;height:55%}
+.hero .in{position:relative;z-index:2;max-width:1000px;margin:auto;padding:6rem 1.5rem 12rem;width:100%}
+.hero h1{font-size:clamp(2.5rem,8.5vw,6rem);line-height:.98;letter-spacing:-.03em;font-weight:800;margin:0 0 1.2rem;max-width:13ch}
+.hero p{max-width:50ch;font-size:1.2rem;opacity:.92}
+.pill{display:inline-block;background:var(--lime);color:#0d2a1b;border-radius:99px;padding:.3rem .9rem;font-size:.9rem;margin-bottom:1.3rem}
+.btn{display:inline-block;background:var(--lime);color:#0d2a1b;border:0;border-radius:99px;padding:.8rem 1.6rem;font-size:1rem;font-weight:800;cursor:pointer;text-decoration:none}
+.btn:hover{transform:scale(1.04)}
+.lf{position:absolute;top:-30px;z-index:1;font-size:1.4rem;animation:fall linear infinite;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.lf{display:none}*{transition:none!important}}
+section{max-width:1000px;margin:auto;padding:4rem 1.5rem}
+h2{font-size:clamp(1.9rem,5vw,3rem);letter-spacing:-.02em;margin:0 0 1.5rem;line-height:1.05}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.tabs button{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:.6rem 1.2rem;font-size:1rem;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:2rem}
+.panel svg{width:100%;height:auto}
+.panel h3{font-size:1.6rem;margin:0 0 .6rem}.panel p{color:var(--muted)}
+.ex{list-style:none;padding:0;margin:1rem 0 0;display:grid;gap:.6rem}
+.ex li{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:.6rem .9rem;font-size:.95rem;line-height:1.4}
+.ex b{font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--leaf);display:block}
+.ex span{color:var(--muted)}
+@media(max-width:700px){.panel{grid-template-columns:1fr}}
+.office{background:var(--deep);color:#fff;border-radius:28px;padding:2rem;max-width:1000px;margin:auto}
+.sw{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.tg{width:70px;height:36px;border-radius:99px;background:#6b7b70;border:0;position:relative;cursor:pointer}
+.tg::after{content:"";position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;background:#fff;transition:.3s}
+.tg[aria-pressed=true]{background:var(--lime)}.tg[aria-pressed=true]::after{left:38px}
+.pp{transition:.6s}.dig .pp{opacity:0;transform:translateY(-30px)}
+.cl{opacity:0;transition:.6s .2s}.dig .cl{opacity:1}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;align-items:center}
+.stat{font-size:1.1rem}.stat b{display:block;font-size:2.4rem;color:var(--lime);font-family:"Bricolage Grotesque",sans-serif}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;background:var(--leaf);color:#fff;border-radius:28px;padding:2rem}
+@media(max-width:700px){.calc{grid-template-columns:1fr}}
+.calc input{width:100%;accent-color:var(--lime)}
+.big{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:800;line-height:1.1}
+.quiz,.chk{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:2rem}
+.q{font-size:1.25rem;font-weight:600;margin:0 0 1rem}
+.opt{display:block;width:100%;text-align:left;margin:.5rem 0;padding:.8rem 1rem;border:2px solid var(--line);border-radius:14px;background:transparent;color:var(--ink);font-size:1rem;cursor:pointer;font-family:inherit}
+.opt:hover:not(:disabled){border-color:var(--leaf)}
+.opt.ok{background:#2f9e5a;color:#fff;border-color:#2f9e5a}.opt.no{background:#c0453a;color:#fff;border-color:#c0453a}
+.fb{min-height:2.6em;color:var(--muted);margin:.6rem 0}
+.chk{display:grid;grid-template-columns:200px 1fr;gap:2rem;align-items:center}
+@media(max-width:700px){.chk{grid-template-columns:1fr;justify-items:center}}
+.chk label{display:flex;gap:.7rem;padding:.5rem 0;cursor:pointer;align-items:center}
+.chk input{width:22px;height:22px;accent-color:var(--leaf)}
+details{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem 1.3rem;margin-bottom:.8rem}
+summary{cursor:pointer;font-family:"Bricolage Grotesque",sans-serif;font-weight:500;font-size:1.1rem}
+details p{color:var(--muted);margin:.7rem 0 0}
+footer{text-align:center;padding:2rem 1.5rem 4rem;color:var(--muted);font-size:.9rem}
+:root{--sky:#3fa9e0;--sun:#ffb347;--coral:#ff7a59}
+.pbar{position:fixed;top:0;left:0;height:4px;width:0;z-index:40;background:linear-gradient(90deg,var(--lime),var(--sun),var(--coral))}
+.spot{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle 300px at var(--mx,70%) var(--my,30%),rgba(255,214,120,.4),transparent 70%)}
+@property --wh{syntax:'<number>';inherits:true;initial-value:120}
+:root{--wh:120;transition:--wh .7s}
+.wash{display:none;position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at var(--wx,50%) var(--wy,50%),hsla(var(--wh),85%,60%,.38),transparent 65%),hsla(var(--wh),70%,60%,.14)}
+body.rgb .hero{filter:hue-rotate(calc((var(--wh) - 120)*1deg))}
+.rip{position:fixed;z-index:46;pointer-events:none;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid var(--c);animation:rip 1.1s ease-out forwards}
+@keyframes rip{to{transform:scale(30);opacity:0;border-width:1px}}
+.blob{position:fixed;z-index:46;pointer-events:none;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;opacity:.55;filter:blur(8px);animation:blob 1.4s ease-out forwards}
+@keyframes blob{to{transform:scale(2.4);opacity:0}}
+body.drag{user-select:none;-webkit-user-select:none}
+.tr{position:fixed;z-index:45;pointer-events:none;font-size:1.1rem;translate:-50% -50%;animation:tr .9s ease-out forwards}
+@keyframes tr{to{opacity:0;transform:translate(var(--dx),45px) rotate(200deg) scale(.4)}}
+.rv{opacity:0;translate:0 40px;scale:.97;transition:opacity .8s,translate .8s,scale .8s}
+.rv.vis{opacity:1;translate:0 0;scale:1}
+.tilt{will-change:transform}
+.tilt.rv,.tilt{transition:opacity .8s,translate .8s,scale .8s,transform .15s ease-out,box-shadow .3s}
+.tilt:hover{box-shadow:0 24px 60px rgba(63,169,224,.28)}
+section h2{display:inline-block;padding:0 .25rem;background:linear-gradient(transparent 68%,rgba(255,179,71,.6) 68%)}
+.tabs button:hover{border-color:var(--sky)}
+.tabs button:nth-child(1)[aria-selected=true]{background:var(--coral);border-color:var(--coral)}
+.tabs button:nth-child(2)[aria-selected=true]{background:var(--sky);border-color:var(--sky)}
+.tabs button:nth-child(3)[aria-selected=true]{background:var(--sun);border-color:var(--sun);color:#12301f}
+.calc{background:linear-gradient(135deg,var(--leaf),#2a8fa6)}
+.panel{border-top:5px solid var(--coral)}.quiz{border-top:5px solid var(--sky)}.chk{border-top:5px solid var(--sun)}
+.opt:hover:not(:disabled){border-color:var(--sky)}
+.gamebox{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--sky);border-radius:24px;padding:1.5rem}
+@media(max-width:760px){.gamebox{grid-template-columns:1fr;justify-items:center}}
+#gc{width:100%;max-width:360px;height:auto;border-radius:18px;touch-action:none;cursor:pointer;display:block;box-shadow:0 10px 30px rgba(13,42,27,.25)}
+.gside p{color:var(--muted)}
+.sc{font-size:1rem;color:var(--muted);margin-top:.6rem}.sc b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:2rem;color:var(--leaf);margin-right:.5rem}
+.chat{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--sun);border-radius:24px;padding:1.5rem}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.chips button{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:.4rem .9rem;font-size:.9rem;cursor:pointer;font-family:inherit}
+.chips button:hover{border-color:var(--sky)}
+.log{display:flex;flex-direction:column;gap:.7rem;max-height:380px;overflow-y:auto;padding:.3rem 0 1rem}
+.m{padding:.7rem 1rem;border-radius:16px;max-width:85%;white-space:pre-wrap;line-height:1.5;font-size:1rem}
+.m.bot{background:var(--bg);border:1px solid var(--line);align-self:flex-start}
+.m.me{background:var(--leaf);color:#fff;align-self:flex-end}
+.row{display:flex;gap:.6rem}
+.row input{flex:1;min-width:0;padding:.8rem 1rem;border-radius:99px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font-size:1rem;font-family:inherit}
+.row input:focus{outline:none;border-color:var(--sky)}
+.note{color:var(--muted);font-size:.85rem;margin:.6rem 0 0}
+body.rgb .wash{display:block}
+.rgbbtn{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:.6rem;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:.55rem 1rem .55rem .6rem;font-size:.95rem;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.rgbbtn .dot{width:34px;height:20px;border-radius:99px;background:#8a978e;position:relative;transition:.3s}
+.rgbbtn .dot::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.3s}
+.rgbbtn[aria-pressed=true]{border-color:transparent;color:#12301f;background:linear-gradient(90deg,#ff4d6d,#ffb347,#c9e86b,#3fa9e0,#a06bff,#ff4d6d);background-size:300% 100%;animation:rgbm 3s linear infinite}
+.rgbbtn[aria-pressed=true] .dot{background:#12301f}.rgbbtn[aria-pressed=true] .dot::after{left:17px}
+@keyframes rgbm{to{background-position:300% 0}}
+@media (pointer:coarse){.rgbbtn{display:none}}
+@media (prefers-reduced-motion:reduce){.rgbbtn[aria-pressed=true]{animation:none}}
+.gamebox{grid-template-columns:1fr;justify-items:center;gap:1.2rem;padding:1.2rem}
+#gwrap{width:100%;max-width:540px}
+#gc{max-width:540px;width:100%}
+#gwrap:fullscreen{display:flex;align-items:center;justify-content:center;background:#0d2a1b;max-width:none}
+#gwrap:fullscreen #gc{width:auto;height:100vh;max-width:100vw;max-height:100vh;border-radius:0}
+.gside{width:100%;max-width:540px;text-align:center}
+.stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
+.gbtns{display:flex;gap:.6rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.gbtn{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:.5rem 1.1rem;font-size:.95rem;cursor:pointer;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:500}
+.gbtn:hover{border-color:var(--sky)}
+.hero{background:radial-gradient(ellipse at 72% 28%,#2c7a52 0%,#0d2a1b 55%,#04100a 100%)}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;opacity:0}
+.hero h1{font-size:clamp(1.05rem,2.4vw,1.7rem);letter-spacing:0;font-weight:500;line-height:1.25;max-width:30ch;margin:0 0 1rem}
+.mega{display:flex;gap:.02em;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(5.5rem,25vw,20rem);line-height:.84;letter-spacing:-.04em;margin:0 0 1.2rem -.03em;will-change:transform}
+.mega span{display:block;background:linear-gradient(180deg,#fff 8%,#d9f5a0 40%,#4fbf74 75%,#1d5c3a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 .06em .08em rgba(0,0,0,.45));transform:translate3d(calc((var(--i) - 1.5)*var(--sp,0)*18vw),calc(var(--sp,0)*-12vh),calc(var(--i)*20px));opacity:calc(1 - var(--sp,0)*1.1)}
+.ff{position:absolute;width:6px;height:6px;border-radius:50%;background:#e8ff9a;box-shadow:0 0 12px 4px rgba(201,232,107,.7);animation:ff linear infinite;z-index:1;pointer-events:none}
+@keyframes ff{0%,100%{transform:translate(0,0);opacity:0}25%{opacity:1}50%{transform:translate(40px,-70px);opacity:.3}75%{opacity:1}}
+.chap{height:420vh;position:relative;max-width:none;padding:0;margin:0}
+.stick{position:sticky;top:0;height:100vh;overflow:hidden;color:#fff;background:#0d2a1b}
+.cbg{position:absolute;inset:0;opacity:0;transition:opacity 1.1s}
+.cbg.on{opacity:1}
+.cbg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 75% 50%,rgba(255,255,255,.14),transparent 55%)}
+.vt{position:absolute;left:-.04em;top:50%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font:800 clamp(7rem,30vh,16rem)/.8 "Bricolage Grotesque",system-ui,sans-serif;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.24);letter-spacing:-.02em;white-space:nowrap;pointer-events:none}
+.cwrap{position:absolute;left:clamp(5rem,16vw,14rem);top:50%;transform:translateY(-50%);max-width:min(540px,60vw)}
+.cnum{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:500;color:var(--lime);margin-bottom:.8rem}
+.ctitle{font:800 clamp(2.4rem,6.5vw,5rem)/1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.03em;margin:0 0 1rem}
+.cwrap p{font-size:1.15rem;opacity:.92;max-width:44ch;margin:0}
+.cchips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.3rem}
+.cchips span{border:1.5px solid rgba(255,255,255,.4);border-radius:99px;padding:.35rem .9rem;font-size:.9rem;background:rgba(255,255,255,.08);backdrop-filter:blur(4px)}
+.swap>*{animation:swp .9s cubic-bezier(.2,.8,.2,1) both}
+.swap>*:nth-child(2){animation-delay:.07s}.swap>*:nth-child(3){animation-delay:.14s}.swap>*:nth-child(4){animation-delay:.21s}
+@keyframes swp{from{opacity:0;transform:translateY(46px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.cprog{position:absolute;right:clamp(1rem,3vw,2.5rem);top:50%;transform:translateY(-50%);height:40vh;width:3px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden}
+.cprog i{display:block;width:100%;height:100%;background:var(--lime);transform-origin:top;transform:scaleY(0)}
+@media(max-width:800px){.cwrap{left:1.3rem;right:1.3rem;top:16%;transform:none;max-width:none}.vt{opacity:.45}}
+.mega span{transform:translate3d(calc((var(--i) - var(--c,1.5))*var(--sp,0)*18vw),calc(var(--sp,0)*-12vh),calc(var(--i)*20px))}
+.ham{position:fixed;top:calc(.55rem + env(safe-area-inset-top,0px));right:1rem;z-index:80;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(13,42,27,.85);backdrop-filter:blur(8px);cursor:pointer;display:grid;place-content:center;gap:5px;padding:0}
+.ham span{display:block;width:22px;height:2.5px;border-radius:2px;background:#fff;transition:.3s}
+.ham[aria-expanded=true] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.ham[aria-expanded=true] span:nth-child(2){opacity:0}
+.ham[aria-expanded=true] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+nav{padding-right:4.2rem}
+.dback{position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:.3s}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(380px,88vw);z-index:70;background:linear-gradient(160deg,#0d2a1b,#14452d);color:#fff;transform:translateX(105%);visibility:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),visibility .45s;padding:calc(.55rem + env(safe-area-inset-top,0px)) 1.4rem 2rem;display:flex;flex-direction:column;gap:.8rem;overflow-y:auto;box-shadow:-20px 0 60px rgba(0,0,0,.4)}
+body.menu .drawer{transform:none;visibility:visible}
+body.menu .dback{opacity:1;visibility:visible}
+.dtop{font:800 1.7rem "Bricolage Grotesque",system-ui,sans-serif;min-height:46px;display:flex;align-items:center;margin-bottom:.6rem}
+.dsec{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-top:.8rem}
+.vbtn{display:block;width:100%;text-align:left;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.18);color:#fff;border-radius:18px;padding:1rem 1.1rem;cursor:pointer;font-family:inherit;transition:.2s}
+.vbtn:hover{transform:translateX(-4px)}
+.vbtn span{display:block;font:800 1.3rem "Bricolage Grotesque",system-ui,sans-serif}
+.vbtn small{opacity:.75;font-size:.9rem}
+.vbtn[aria-pressed=true]{background:var(--lime);color:#0d2a1b;border-color:var(--lime)}
+.drow{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:rgba(255,255,255,.07);border-radius:18px;padding:.8rem 1.1rem}
+.seg{display:flex;background:rgba(0,0,0,.3);border-radius:99px;padding:3px}
+.seg button{border:0;background:transparent;color:#fff;border-radius:99px;padding:.4rem 1rem;font-weight:800;cursor:pointer;font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.seg button[aria-pressed=true]{background:var(--lime);color:#0d2a1b}
+.drawer .rgbbtn{position:static;box-shadow:none;width:100%;justify-content:flex-start;background:rgba(255,255,255,.07);color:#fff;border-color:rgba(255,255,255,.18);border-radius:18px;padding:.8rem 1.1rem}
+.drawer .rgbbtn[aria-pressed=true]{color:#12301f}
+body.vlessons nav,body.vlessons #gl{display:none}
+.gbtn[aria-pressed=true]{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.lhero{position:relative;padding:7rem 1.5rem 4.5rem;background:radial-gradient(ellipse at 70% 20%,#2c7a52,#0d2a1b 55%,#04100a);color:#fff;overflow:hidden}
+.in2{max-width:1000px;margin:auto}
+.lh1{font:800 clamp(4rem,18vw,13rem)/.85 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.04em;margin:0 0 1rem;background:linear-gradient(180deg,#fff 8%,#d9f5a0 45%,#4fbf74 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 .05em .08em rgba(0,0,0,.45))}
+.lhero p{max-width:46ch;font-size:1.2rem;opacity:.92}
+.lsec{max-width:1000px;margin:auto;padding:3rem 1.5rem 4rem}
+.ltools{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
+@media(max-width:700px){.ltools{grid-template-columns:1fr}}
+.lprog,.ltimer{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.2rem}
+.lprog svg{width:90px;height:90px;flex:none}
+.lprog b{font:800 2.2rem/1 "Bricolage Grotesque",system-ui,sans-serif;display:block}
+.tm{font:800 3rem/1 "Bricolage Grotesque",system-ui,sans-serif;color:var(--leaf);font-variant-numeric:tabular-nums}
+.ltimer{justify-content:space-between;flex-wrap:wrap}.ltimer small{color:var(--coral);font-weight:800}
+.lchips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.lchips button{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:.5rem 1.1rem;font-size:.95rem;cursor:pointer;font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.lchips button[aria-pressed=true]{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.2rem}
+.lc{position:relative;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--tc,var(--leaf));border-radius:24px;padding:1.5rem;overflow:hidden;animation:pop .6s cubic-bezier(.2,.8,.2,1) both;transition:transform .25s,box-shadow .25s}
+.lc:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(63,169,224,.25)}
+.lc .no{position:absolute;right:1rem;top:.2rem;font:800 5rem/1 "Bricolage Grotesque",system-ui,sans-serif;color:transparent;-webkit-text-stroke:2px var(--line)}
+.lc h3{margin:.6rem 0 .5rem;font-size:1.4rem;padding-right:3rem}
+.lc .bd{display:inline-block;background:var(--tc);color:#12301f;border-radius:99px;padding:.15rem .8rem;font-size:.8rem;font-weight:800;margin-right:.5rem;font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.lc .mn{color:var(--muted);font-size:.9rem}
+.lc p{color:var(--muted);font-size:1rem;margin:0 0 .6rem}
+.lc details{border:0;padding:0;background:transparent;margin:.4rem 0 1rem}
+.lc ul{color:var(--muted);padding-left:1.2rem;font-size:.95rem;margin:.5rem 0 0}
+.lc.done{opacity:.72}.lc.done h3{text-decoration:line-through}
+@keyframes pop{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
+.ham{z-index:200}.drawer{z-index:190}.dback{z-index:180}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem}
+.fc{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--tc,var(--leaf));border-radius:22px;padding:1.3rem 1.4rem;transition:transform .25s,box-shadow .25s}
+.fc:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(63,169,224,.22)}
+.fc b{display:block;font:800 clamp(2.2rem,6vw,3.2rem)/1 "Bricolage Grotesque",system-ui,sans-serif;color:var(--tc,var(--leaf));margin-bottom:.4rem}
+.fc p{margin:0;color:var(--muted);font-size:1rem}
+</style>
+</head>
+<body>
+<button class="ham" id="ham" aria-label="Menü" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
+<div class="dback" id="dback"></div>
+<aside class="drawer" id="drawer" aria-label="Menü" aria-hidden="true">
+<div class="dtop">Menü</div>
+<div class="dsec">Oldalak</div>
+<button class="vbtn" data-view="project" aria-pressed="true"><span>Projekt</span><small>9.C: Digitális megoldások</small></button>
+<button class="vbtn" data-view="subjects" aria-pressed="false"><span>Tantárgyak</span><small>Melyik tárgy mit ad a projekthez</small></button>
+<div class="dsec">Beállítások</div>
+<div class="drow"><span>Nyelv</span><div class="seg" role="group" aria-label="Nyelv"><button data-lang="hu" aria-pressed="true">HU</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
+<button class="rgbbtn" id="rgbb" aria-pressed="false"><span class="dot"></span>RGB mód</button>
+</aside>
+<script>(function(){var b=document.body,h=document.getElementById('ham');function m(o){b.classList.toggle('menu',o);h.setAttribute('aria-expanded',o);document.getElementById('drawer').setAttribute('aria-hidden',!o)}h.onclick=function(){m(!b.classList.contains('menu'))};document.getElementById('dback').onclick=function(){m(false)}})()</script>
+<nav aria-label="Menü"><a href="#chap">Fejezetek</a><a href="#temak">Témák</a><a href="#tenyek">Tények</a><a href="#iroda">Iroda</a><a href="#kalk">Kalkulátor</a><a href="#kviz">Kvíz</a><a href="#vallalas">Vállalás</a><a href="#kerdesek">Kérdések</a><a href="#jatek">Játék</a><a href="#ai">AI</a></nav>
+
+<div id="v-project">
+<canvas id="gl" aria-hidden="true"></canvas>
+<header class="hero" id="top">
+<svg class="land" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<circle id="sun" cx="900" cy="90" r="70" fill="#f7f3a8" opacity=".9"/>
+<g id="h1"><path d="M0 220 Q250 120 520 210 T1200 170 V400 H0Z" fill="#2c7a4b"/></g>
+<g id="h2"><path d="M0 280 Q300 200 600 270 T1200 240 V400 H0Z" fill="#1f6339"/>
+<g transform="translate(180 215)"><rect x="-6" y="0" width="12" height="60" fill="#5a3a22"/><circle cy="-10" r="42" fill="#3a9b5e"/><circle cx="-24" cy="12" r="28" fill="#44aa68"/><circle cx="26" cy="14" r="26" fill="#2f8a52"/></g>
+<g transform="translate(1010 235) scale(.8)"><rect x="-6" y="0" width="12" height="60" fill="#5a3a22"/><circle cy="-10" r="42" fill="#3a9b5e"/><circle cx="-24" cy="12" r="28" fill="#44aa68"/></g></g>
+<g id="h3"><path d="M0 340 Q400 290 800 335 T1200 320 V400 H0Z" fill="#0d2a1b"/></g>
+</svg>
+<div class="in">
+<span class="pill f">9.C osztály projektje</span>
+<div class="mega" id="mega" aria-hidden="true"><span>Z</span><span>Ö</span><span>L</span><span>D</span></div>
+<h1>Digitális megoldások a fenntartható életért</h1>
+<p>Okos alkalmazások, papírmentes iroda, zöld IT. Fedezd fel, hogyan segít a technológia kevesebbet pazarolni, és próbáld ki te is.</p>
+<p><a class="btn" href="#chap">Fedezd fel</a></p>
+</div>
+</header>
+
+<section class="chap" id="chap" aria-label="Három fejezet a fenntartható digitális életről">
+<div class="stick">
+<div class="vt" id="vt" aria-hidden="true">OKOS</div>
+<div class="cwrap" id="cw"></div>
+<div class="cprog" aria-hidden="true"><i id="cf"></i></div>
+</div>
+</section>
+
+<section id="temak">
+<h2>Három terület, sok lehetőség</h2>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="panel" id="panel" role="tabpanel"></div>
+</section>
+
+<section id="tenyek">
+<h2>Tudtad? Tények és számok</h2>
+<div class="facts" id="facts"></div>
+<p class="note">Becslések; források: ENSZ, IEA, The Shift Project. Az értékek évről évre változnak.</p>
+</section>
+
+<section id="iroda" style="max-width:none;padding-left:1rem;padding-right:1rem">
+<div class="office" id="off">
+<h2>Papíros vagy papírmentes iroda?</h2>
+<div class="sw"><span>Papír</span><button class="tg" id="tg" aria-pressed="false" aria-label="Papírmentes mód"></button><span>Digitális</span></div>
+<div class="cols">
+<svg viewBox="0 0 400 260" role="img" aria-label="Íróasztal papírhalmokkal, digitális módban felhővel">
+<rect x="20" y="190" width="360" height="22" rx="6" fill="#8a5a36"/><rect x="50" y="212" width="12" height="40" fill="#6b4328"/><rect x="338" y="212" width="12" height="40" fill="#6b4328"/>
+<g class="pp"><rect x="60" y="120" width="90" height="70" fill="#f4f4ee" transform="rotate(-6 100 150)"/><rect x="70" y="95" width="90" height="70" fill="#fff" transform="rotate(4 100 130)"/><rect x="80" y="70" width="90" height="70" fill="#f4f4ee" transform="rotate(-3 100 100)"/><rect x="250" y="130" width="90" height="60" fill="#fff" transform="rotate(8 290 160)"/><rect x="262" y="105" width="90" height="60" fill="#f4f4ee" transform="rotate(-5 300 130)"/><g stroke="#aaa" stroke-width="3"><path d="M95 90h60M95 105h50M275 125h60M275 140h40"/></g></g>
+<g class="cl"><path d="M120 90a30 30 0 0 1 58-10a26 26 0 0 1 40 22a24 24 0 0 1-8 46H130a26 26 0 0 1-10-58z" fill="#c9e86b"/><path d="M165 125l12 12 24-26" stroke="#0d2a1b" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="240" y="120" width="110" height="70" rx="6" fill="#26412d"/><rect x="248" y="128" width="94" height="54" rx="3" fill="#7fd19b"/></g>
+</svg>
+<div class="stat"><b id="s1">500 lap</b>havi papírfogyasztás (példa)</div>
+<div class="stat"><b id="s2">2,5 kg</b>papír havonta egy irodában</div>
+</div>
+</div>
+</section>
+
+<section id="kalk">
+<h2>Mennyi papírt és fát spórolhatsz?</h2>
+<div class="calc">
+<div><label for="pages">Hány oldalt nyomtatsz egy héten? <strong id="pv">20</strong></label>
+<input id="pages" type="range" min="0" max="300" value="20">
+<p class="big" id="res"></p><small>Ha 80%-át digitálisan intéznéd. Becslés: 1 lap kb. 5 g, 1 fa kb. 8 000 lap.</small></div>
+<svg viewBox="0 0 200 220" aria-hidden="true"><ellipse cx="100" cy="208" rx="80" ry="8" fill="rgba(0,0,0,.2)"/><g id="trees"></g></svg>
+</div>
+</section>
+
+<section id="kviz">
+<h2>Kvíz: mennyit tudsz?</h2>
+<div class="quiz" id="quiz"></div>
+</section>
+
+<section id="vallalas">
+<h2>Zöld vállalás</h2>
+<div class="chk"><svg viewBox="0 0 120 120" width="180" height="180" role="img" aria-label="Haladás"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--line)" stroke-width="12"/><circle id="ring" cx="60" cy="60" r="50" fill="none" stroke="var(--leaf)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)" style="transition:.5s"/><text id="pct" x="60" y="68" text-anchor="middle" font-size="24" font-weight="800" fill="var(--ink)">0%</text></svg>
+<div><div id="list"></div><p class="f" id="msg" style="font-weight:800;color:var(--leaf)"></p></div></div>
+</section>
+
+<section id="kerdesek">
+<h2>Kutatási kérdések</h2>
+<details open><summary>Hogyan lehet papírmentes irodát működtetni?</summary><p>Digitális iratkezeléssel, felhős tárhellyel, e-aláírással és világos szabályokkal arról, mit nem nyomtatunk ki.</p></details>
+<details><summary>Milyen szervezési módszerekkel csökkenthető egy iroda ökológiai lábnyoma?</summary><p>Közös nyomtatók, távmunka-napok, kikapcsolási rend, szelektív gyűjtés és tudatos beszerzés.</p></details>
+<details><summary>Milyen szerepe van az adminisztráció digitalizálásának?</summary><p>Gyorsabb ügyintézés, kevesebb papír és szállítás, követhetőbb folyamatok.</p></details>
+<details><summary>Milyen digitális eszközök segítik a fenntartható ügyvitelt?</summary><p>Felhős irodai csomagok, projektkezelők, e-számlázás, online űrlapok, digitális aláírás.</p></details>
+<details><summary>Hogyan lehet zöld rendezvényt szervezni egy intézményben?</summary><p>Online meghívó és regisztráció, digitális jegyzetek, újrahasználható eszközök, hulladékszegény program.</p></details>
+</section>
+<section id="jatek">
+<h2>Mini játék: Zöld repülés</h2>
+<div class="gamebox">
+<div id="gwrap"><canvas id="gc" width="960" height="1440" tabindex="0" aria-label="Flappy bird jellegű játék: kattints vagy nyomj szóközt a repüléshez"></canvas></div>
+<div class="gside">
+<p>Kattints, koppints vagy nyomj szóközt, hogy a madár szárnyat csapjon. Kerüld ki a papírhalmokat, gyűjtsd a fákat, és figyeld, ahogy a nap lemegy!</p>
+<div class="stats"><div class="sc"><b id="gs">0</b>pont</div><div class="sc"><b id="gb">0</b>rekord</div><div class="sc"><b id="gt">0</b>fa</div></div>
+<div class="gbtns"><button class="gbtn" id="gm">Hang: be</button><button class="gbtn" id="gf">Teljes képernyő</button></div>
+</div>
+</div>
+</section>
+
+<section id="ai">
+<h2>Kérdezz a zöld asszisztenstől</h2>
+<div class="chat">
+<div class="chips" id="chips"></div>
+<div class="log" id="log" role="log" aria-live="polite"><div class="m bot">Szia! A fenntartható digitális megoldásokról kérdezhetsz: appokról, papírmentes irodáról, zöld IT-ról vagy rendezvényekről.</div></div>
+<div class="row"><input id="qi" type="text" placeholder="Írd ide a kérdésed..." aria-label="Kérdésed" maxlength="300"><button class="btn" id="qs">Küldés</button></div>
+<p class="note" id="note"></p>
+</div>
+</section>
+
+</div>
+<main id="v-subjects" hidden>
+<header class="lhero"><div class="in2"><span class="pill f">Tantárgyak</span><h1 class="lh1" style="font-size:clamp(3rem,13vw,9rem)">Tantárgyak</h1><p>Melyik tantárgy hogyan segíti a projektet.</p></div></header>
+<div class="lsec"><div class="lgrid" id="sgrid"></div></div>
+</main>
+<main id="v-lessons" hidden>
+<header class="lhero"><div class="in2">
+<span class="pill f">Óraterv</span>
+<h1 class="lh1">Tanórák</h1>
+<p>A projekt hat tanórán át készül el: az első ötlettől a bemutatóig.</p>
+</div></header>
+<div class="lsec">
+<div class="ltools">
+<div class="lprog"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="lring" cx="50" cy="50" r="40" fill="none" stroke="var(--leaf)" stroke-width="10" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="251.3" transform="rotate(-90 50 50)" style="transition:.5s"/></svg><div><b id="ldone">0 / 6</b><span>kész óra</span></div></div>
+<div class="ltimer"><div><div class="tm" id="tm">45:00</div><small id="tn"></small></div><div class="gbtns" style="margin:0"><button class="gbtn" id="ts">Indítás</button><button class="gbtn" id="trs">Nullázás</button></div></div>
+</div>
+<div class="lchips" id="lchips" role="group" aria-label="Szűrő"></div>
+<div class="lgrid" id="lgrid"></div>
+</div>
+</main>
+<footer>Készítette a 9.C osztály</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+var $=function(i){return document.getElementById(i)};
+(function(){
+var D={'Menü':'Menu','Fejezetek':'Chapters','Témák':'Topics','Iroda':'Office','Kalkulátor':'Calculator','Kvíz':'Quiz','Vállalás':'Pledge','Kérdések':'Questions','Játék':'Game',
+'9.C osztály projektje':'Class 9.C project','Digitális megoldások a fenntartható életért':'Digital Solutions for a Sustainable Life',
+'Okos alkalmazások, papírmentes iroda, zöld IT. Fedezd fel, hogyan segít a technológia kevesebbet pazarolni, és próbáld ki te is.':'Smart apps, the paperless office, green IT. Discover how technology helps us waste less, and try it yourself.',
+'Fedezd fel':'Explore','Három fejezet a fenntartható digitális életről':'Three chapters about sustainable digital life','OKOS':'SMART','PAPÍR':'PAPER','ZÖLD':'GREEN',
+'Három terület, sok lehetőség':'Three areas, many possibilities','Okos alkalmazások':'Smart apps','Papírmentes iroda':'Paperless office','Fenntartható IT':'Sustainable IT',
+'Az appok mérik, mennyi energiát fogyasztunk, segítenek a közlekedésben és csökkentik az ételpazarlást.':'Apps measure how much energy we use, help with getting around and reduce food waste.',
+'Felhős dokumentumok, e-aláírás és online űrlapok: a papír helyett a képernyő viszi a munkát.':'Cloud documents, e-signatures and online forms: the screen does the work instead of paper.',
+'Hosszabb eszközélettartam, energiatakarékos működés, felesleges adatok törlése.':'Longer device lifespans, energy-saving operation and deleting unnecessary data.',
+'Megmentett ételcsomagok olcsón az étteremből vagy a boltból, így kevesebb étel kerül a kukába.':'Rescued meal packs at a low price from restaurants and shops, so less food ends up in the bin.',
+'BKK Futár és MÁV app':'BKK Futár and MÁV apps','Tömegközlekedés követése és jegyvásárlás, hogy ne kelljen autóval menni.':'Track public transport and buy tickets so you do not need to drive.',
+'Budapesti közösségi kerékpár, rövid utakra autó helyett.':'Budapest’s bike-sharing system, for short trips instead of the car.',
+'Google Home / okosotthon appok':'Google Home / smart home apps','Fűtés, világítás és konnektorok vezérlése, fogyasztás követése.':'Control heating, lighting and sockets, and track consumption.',
+'Fókuszálós app: ha nem nyúlsz a telefonhoz, virtuális fa nő, és a készítők valódi fát is ültetnek.':'A focus app: while you leave your phone alone a virtual tree grows, and the makers plant real trees too.',
+'Google Workspace és Microsoft 365':'Google Workspace and Microsoft 365','Közös dokumentumszerkesztés és felhős tárhely, nyomtatás nélkül.':'Shared document editing and cloud storage, no printing needed.',
+'Adobe Acrobat Sign és DocuSign':'Adobe Acrobat Sign and DocuSign','Elektronikus aláírás szerződésekhez és jóváhagyásokhoz.':'Electronic signatures for contracts and approvals.',
+'Elektronikus számlák kiállítása és küldése e-mailben.':'Issue and send electronic invoices by e-mail.','Trello és Notion':'Trello and Notion','Feladatok, jegyzetek és projektek digitális követése füzet helyett.':'Track tasks, notes and projects digitally instead of in a notebook.',
+'Ügyfélkapu és DÁP':'Ügyfélkapu and DÁP (Hungarian e-government)','Hivatalos ügyek online intézése papír beadványok nélkül.':'Handle official matters online without paper submissions.',
+'Keresőmotor, amely a bevételéből fákat ültet.':'A search engine that plants trees with its revenue.','Felújított telefonok, laptopok vásárlása új helyett.':'Buy refurbished phones and laptops instead of new ones.',
+'Javítási útmutatók, hogy ne kelljen azonnal lecserélni az eszközt.':'Repair guides so you do not have to replace a device right away.',
+'Energiatakarékos mód':'Energy-saving mode','A beépített akkumulátor- és energiatakarékos beállítások csökkentik a fogyasztást.':'Built-in battery and energy-saving settings reduce consumption.',
+'Felhő takarítása':'Cleaning up the cloud','A régi fájlok és e-mailek törlése kevesebb tárhelyet és energiát igényel.':'Deleting old files and e-mails needs less storage and energy.',
+'Az appok mérik a fogyasztást, segítik a közlekedést és megmentik az ételt a kukától. A telefonod lehet a legjobb zöld eszközöd.':'Apps measure consumption, help you get around and save food from the bin. Your phone can be your best green tool.',
+'Felhős dokumentumok, e-aláírás és online űrlapok: a munka a képernyőn marad, a papír pedig a fán.':'Cloud documents, e-signatures and online forms: the work stays on the screen, and the paper stays on the tree.',
+'Hosszabb eszközélettartam, kevesebb felesleges adat és energiatakarékos működés: a legzöldebb eszköz az, amit nem kell lecserélni.':'Longer device lifespans, less unnecessary data and energy-saving operation: the greenest device is the one you do not have to replace.',
+'E-aláírás':'E-signature','Papíros vagy papírmentes iroda?':'Paper or paperless office?','Papír':'Paper','Papírmentes mód':'Paperless mode','Digitális':'Digital',
+'Íróasztal papírhalmokkal, digitális módban felhővel':'Desk with stacks of paper, with a cloud in digital mode','havi papírfogyasztás (példa)':'monthly paper use (example)','papír havonta egy irodában':'of paper a month in one office',
+'Mennyi papírt és fát spórolhatsz?':'How much paper and how many trees can you save?','Hány oldalt nyomtatsz egy héten?':'How many pages do you print a week?',
+'Ha 80%-át digitálisan intéznéd. Becslés: 1 lap kb. 5 g, 1 fa kb. 8 000 lap.':'If you handled 80% of them digitally. Estimate: 1 sheet is about 5 g, 1 tree is about 8,000 sheets.',
+'Kvíz: mennyit tudsz?':'Quiz: how much do you know?',
+'Melyik a legjobb módja a dokumentumok biztonságos megosztásának papír nélkül?':'What is the best way to share documents securely without paper?','Kinyomtatni és szkennelni':'Print and scan','Felhős tárhely megosztással':'Cloud storage with sharing','Faxon küldeni':'Send by fax','A felhős megosztás nem igényel papírt, és követhető.':'Cloud sharing needs no paper and is traceable.',
+'Mi csökkenti leginkább egy eszköz környezeti terhelését?':'What reduces a device’s environmental impact the most?','Évente új telefon':'A new phone every year','Javítás és hosszabb használat':'Repairing it and using it longer','Mindig bekapcsolva hagyás':'Leaving it switched on all the time','A gyártás okozza a legtöbb terhelést, ezért a hosszabb élettartam számít.':'Manufacturing causes most of the impact, so a longer lifespan matters.',
+'Mire jó az elektronikus aláírás?':'What is an electronic signature good for?','Papír nélküli jóváhagyás':'Approval without paper','Gyorsabb internet':'Faster internet','Képszerkesztés':'Photo editing','A szerződések és igazolások nyomtatás nélkül is érvényesek lehetnek.':'Contracts and certificates can be valid without printing.',
+'Melyik zöld rendezvényszervezési ötlet?':'Which one is a green event-planning idea?','Papír meghívók százával':'Hundreds of paper invitations','Online regisztráció és digitális program':'Online registration and a digital programme','Eldobható poharak':'Disposable cups','Az online regisztráció és program papírt és hulladékot spórol.':'Online registration and a digital programme save paper and waste.',
+'Zöld szakértő vagy! 🌳':'You are a green expert! 🌳','Szép munka, még pár trükk és profi leszel.':'Nice work, a few more tricks and you will be a pro.','Nézd át újra az oldalt, és próbáld újra!':'Look through the page again and try once more!','Újra':'Again','Tovább':'Next',
+'Zöld vállalás':'Green pledge','Haladás':'Progress','Nem nyomtatok ki felesleges dokumentumot':'I will not print unnecessary documents','Törlöm a régi fájlokat és e-maileket':'I will delete old files and e-mails','Kikapcsolom az eszközöket, ha nem használom':'I will switch off devices when I am not using them','Digitális jegyzetet használok':'I will use digital notes','Javíttatok, nem cserélek azonnal':'I will repair instead of replacing right away','Megosztok egy tippet másoknak':'I will share a tip with others','Gratulálunk, zöld hős vagy! 🌍':'Congratulations, you are a green hero! 🌍',
+'Kutatási kérdések':'Research questions','Hogyan lehet papírmentes irodát működtetni?':'How can you run a paperless office?','Digitális iratkezeléssel, felhős tárhellyel, e-aláírással és világos szabályokkal arról, mit nem nyomtatunk ki.':'With digital records, cloud storage, e-signatures and clear rules about what we do not print.',
+'Milyen szervezési módszerekkel csökkenthető egy iroda ökológiai lábnyoma?':'Which organisational methods can reduce an office’s ecological footprint?','Közös nyomtatók, távmunka-napok, kikapcsolási rend, szelektív gyűjtés és tudatos beszerzés.':'Shared printers, remote-work days, a switch-off routine, separate waste collection and mindful purchasing.',
+'Milyen szerepe van az adminisztráció digitalizálásának?':'What role does digitalising administration play?','Gyorsabb ügyintézés, kevesebb papír és szállítás, követhetőbb folyamatok.':'Faster processing, less paper and transport, more traceable processes.',
+'Milyen digitális eszközök segítik a fenntartható ügyvitelt?':'Which digital tools support sustainable administration?','Felhős irodai csomagok, projektkezelők, e-számlázás, online űrlapok, digitális aláírás.':'Cloud office suites, project managers, e-invoicing, online forms, digital signatures.',
+'Hogyan lehet zöld rendezvényt szervezni egy intézményben?':'How can you organise a green event in an institution?','Online meghívó és regisztráció, digitális jegyzetek, újrahasználható eszközök, hulladékszegény program.':'Online invitations and registration, digital notes, reusable items, a low-waste programme.',
+'Mini játék: Zöld repülés':'Mini game: Green Flight','Flappy bird jellegű játék: kattints vagy nyomj szóközt a repüléshez':'Flappy Bird-style game: click or press space to fly',
+'Kattints, koppints vagy nyomj szóközt, hogy a madár szárnyat csapjon. Kerüld ki a papírhalmokat, gyűjtsd a fákat, és figyeld, ahogy a nap lemegy!':'Click, tap or press space to make the bird flap its wings. Dodge the paper stacks, collect the trees and watch the sun go down!',
+'pont':'points','rekord':'best','fa':'trees','Hang: be':'Sound: on','Hang: ki':'Sound: off','Teljes képernyő':'Fullscreen','Zöld repülés':'Green Flight','Kerüld ki a papírhalmokat, gyűjtsd a fákat!':'Dodge the paper stacks, collect the trees!','Koppints a kezdéshez':'Tap to start','Vége!':'Game over!','Próbáld újra!':'Try again!','Koppints az újrakezdéshez':'Tap to play again',
+'1 fa kb. 8 000 A4 lapot ad.':'1 tree gives about 8,000 A4 sheets.','A kétoldalas nyomtatás felezi a papírt.':'Double-sided printing halves the paper.','Az e-aláírás nyomtatás nélkül is érvényes lehet.':'An e-signature can be valid without printing.','A régi fájlok törlése energiát spórol.':'Deleting old files saves energy.','A javítás kevesebb e-hulladékot termel.':'Repairing creates less e-waste.','Kapcsold ki, amit nem használsz.':'Switch off what you do not use.',
+'Kérdezz a zöld asszisztenstől':'Ask the green assistant','Szia! A fenntartható digitális megoldásokról kérdezhetsz: appokról, papírmentes irodáról, zöld IT-ról vagy rendezvényekről.':'Hi! You can ask about sustainable digital solutions: apps, the paperless office, green IT or events.',
+'Írd ide a kérdésed...':'Type your question here...','Kérdésed':'Your question','Küldés':'Send','Gondolkodom...':'Thinking...','Melyik app segít az ételpazarlás ellen?':'Which app helps against food waste?','Hogyan lehet zöld rendezvényt szervezni?':'How can you organise a green event?','Mit tehetek az eszközeimmel a környezetért?':'What can I do with my devices for the environment?',
+'Az AI asszisztens ebben a nézetben most nem érhető el.':'The AI assistant is not available in this view right now.','Az AI hibázhat, fontos infót ellenőrizz máshol is.':'The AI can make mistakes; check important information elsewhere too.','Az AI használatához engedélyezned kell a kérést.':'You need to allow the request to use the AI.','Túl sok kérdés, várj egy kicsit.':'Too many questions, please wait a moment.','Nem sikerült választ kapni, próbáld újra.':'Could not get an answer, please try again.',
+'RGB mód':'RGB mode','Készítette a 9.C osztály':'Made by class 9.C',
+'Oldalak':'Pages','Projekt':'Project','9.C: Digitális megoldások':'9.C: Digital solutions','Tanórák':'Lessons','Óraterv és feladatok':'Lesson plan and tasks','Beállítások':'Settings','Nyelv':'Language',
+'Óraterv':'Lesson plan','A projekt hat tanórán át készül el: az első ötlettől a bemutatóig.':'The project takes shape over six lessons, from the first idea to the final presentation.','kész óra':'lessons done','Indítás':'Start','Szünet':'Pause','Nullázás':'Reset','Lejárt az idő!':'Time is up!','Szűrő':'Filter','Mind':'All','Elmélet':'Theory','Kutatás':'Research','Gyakorlat':'Practice','Bemutató':'Presentation','Feladatok':'Tasks','Jelölés késznek':'Mark as done','Kész':'Done',
+'Bevezetés a fenntarthatóságba':'Introduction to sustainability','Megismerjük az ökológiai lábnyom fogalmát, és kitűzzük a projekt céljait.':'We learn what an ecological footprint is and set the goals of the project.','Közös ötletroham a táblán':'Group brainstorm on the board','Az ökológiai lábnyom kiszámolása online kalkulátorral':'Calculating the ecological footprint with an online calculator','Csapatok és szerepek kiosztása':'Assigning teams and roles',
+'Okos alkalmazások vizsgálata':'Testing smart apps','Kipróbálunk néhány zöld appot, és értékeljük, mennyit segítenek.':'We try out a few green apps and rate how much they help.','Három app kipróbálása párban':'Trying three apps in pairs','Értékelő táblázat kitöltése':'Filling in a rating table','Rövid beszámoló az osztálynak':'A short report to the class',
+'Papírmentes iroda kutatás':'Paperless office research','Megválaszoljuk, hogyan működhet papírmentes iroda, és milyen eszközök kellenek hozzá.':'We answer how a paperless office can work and which tools it needs.','Források keresése és jegyzetelés':'Finding sources and taking notes','Az első három kutatási kérdés megválaszolása':'Answering the first three research questions','Összefoglaló vázlat készítése':'Drafting a summary',
+'Utánajárunk az eszközök élettartamának, az energiafogyasztásnak és a zöld adattárolásnak.':'We look into device lifespans, energy use and green data storage.','Egy saját eszköz energiabeállításainak átnézése':'Reviewing the energy settings of one of your own devices','Zöld rendezvényszervezés ötletei':'Ideas for green event planning','Tippgyűjtemény a honlaphoz':'Collecting tips for the website',
+'Honlap és app prototípus':'Website and app prototype','Megtervezzük és elkészítjük a projekt honlapját és az app vázlatát.':'We design and build the project website and the app sketch.','Oldalszerkezet és színek megtervezése':'Planning the page structure and colours','Tartalom feltöltése a honlapra':'Adding content to the website','Az app képernyőterveinek megrajzolása':'Drawing the app’s screen designs',
+'Kampány és bemutató':'Campaign and presentation','Kampányt tervezünk, és bemutatjuk a végtermékeket az osztálynak.':'We plan a campaign and present the final products to the class.','Kampányszlogen és poszter':'Campaign slogan and poster','Próbabemutató időzítéssel':'A timed practice presentation','Visszajelzés és értékelés':'Feedback and assessment'};
+var PT=[[/^(\d+) lap évente, (\d+)(?:,(\d+))? kg papír$/,function(m){return m[1]+' sheets a year, '+m[2]+(m[3]?'.'+m[3]:'')+' kg of paper'}],
+[/^(~?\d+) lap$/,function(m){return m[1]+' sheets'}],[/^(\d+),(\d+) kg$/,function(m){return m[1]+'.'+m[2]+' kg'}],
+[/^(Helyes!|Nem egészen\.) (.+)$/,function(m){return (m[1]==='Helyes!'?'Correct!':'Not quite.')+' '+tr(m[2])}],
+[/^Eredmény: (\d+) \/ (\d+)$/,function(m){return 'Result: '+m[1]+' / '+m[2]}],[/^Pont: (\d+)$/,function(m){return 'Score: '+m[1]}],
+[/^Rekord: (\d+) Fa: (\d+)$/,function(m){return 'Best: '+m[1]+'   Trees: '+m[2]}],[/^(\d+) perc$/,function(m){return m[1]+' min'}]];
+var LANG='hu',recs=new WeakMap(),AT=['aria-label','placeholder','title'],T0=document.title;
+Object.assign(D,{'Tantárgyak':'Subjects','Melyik tárgy mit ad a projekthez':'What each subject adds to the project','Melyik tantárgy hogyan segíti a projektet.':'How each subject helps the project.','Tények':'Facts','Tudtad? Tények és számok':'Did you know? Facts and figures','Becslések; források: ENSZ, IEA, The Shift Project. Az értékek évről évre változnak.':'Estimates; sources: UN, IEA, The Shift Project. Values change from year to year.'});
+function norm(s){return s.replace(/\s+/g,' ').trim()}
+function tr(s){var k=norm(s);if(!k)return s;var e=D[k];if(e===undefined)for(var i=0;i<PT.length;i++){var m=k.match(PT[i][0]);if(m){e=PT[i][1](m);break}}if(e===undefined)return s;return s.match(/^\s*/)[0]+e+s.match(/\s*$/)[0]}
+window.TR=function(s){return LANG==='en'?tr(s):s};
+function txt(n){var r=recs.get(n);if(r&&n.data===r.en)return;var t=tr(n.data);if(t!==n.data){recs.set(n,{hu:n.data,en:t});n.data=t}else if(r)recs.delete(n)}
+function each(root,fn){if(root.nodeType===3){fn(root);return}var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentNode&&n.parentNode.nodeName;return p==='SCRIPT'||p==='STYLE'?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}}),n;while(n=w.nextNode())fn(n)}
+function atrs(root){var els=root.querySelectorAll?[].slice.call(root.querySelectorAll('[aria-label],[placeholder],[title]')):[];if(root.getAttribute)els.push(root);els.forEach(function(el){AT.forEach(function(a){var v=el.getAttribute(a),k='data-hu-'+a;if(v==null||el.hasAttribute(k))return;var t=tr(v);if(t!==v){el.setAttribute(k,v);el.setAttribute(a,t)}})})}
+new MutationObserver(function(ms){if(LANG!=='en')return;ms.forEach(function(m){if(m.type==='characterData')txt(m.target);else[].forEach.call(m.addedNodes,function(n){if(n.nodeType===3)txt(n);else if(n.nodeType===1){each(n,txt);atrs(n)}})})}).observe(document.body,{childList:true,subtree:true,characterData:true});
+var P=CanvasRenderingContext2D.prototype;['fillText','strokeText'].forEach(function(k){var o=P[k];P[k]=function(t,x,y,w){return o.call(this,LANG==='en'?tr(String(t)):t,x,y,w)}});
+function mega(){var m=document.getElementById('mega');if(!m)return;var w=LANG==='en'?'GREEN':'ZÖLD';m.textContent='';w.split('').forEach(function(ch,i){var s=document.createElement('span');s.textContent=ch;s.style.setProperty('--i',i);m.appendChild(s)});m.style.setProperty('--c',(w.length-1)/2)}
+function setLang(l){LANG=l;window.LANG=l;document.documentElement.lang=l;try{localStorage.setItem('zlang',l)}catch(e){}
+if(l==='en'){each(document.body,txt);atrs(document.body);document.title='Digital Solutions for a Sustainable Life'}
+else{each(document.body,function(n){var r=recs.get(n);if(r){n.data=r.hu;recs.delete(n)}});[].forEach.call(document.querySelectorAll('[data-hu-aria-label],[data-hu-placeholder],[data-hu-title]'),function(el){AT.forEach(function(a){var k='data-hu-'+a;if(el.hasAttribute(k)){el.setAttribute(a,el.getAttribute(k));el.removeAttribute(k)}})});document.title=T0}
+mega();[].forEach.call(document.querySelectorAll('[data-lang]'),function(b){b.setAttribute('aria-pressed',b.dataset.lang===l)})}
+window.setLang=setLang;
+var sv=null;try{sv=localStorage.getItem('zlang')}catch(e){}
+if(sv==='en')setLang('en');
+})();
+
+// falling leaves
+(function(){var h=$('top');for(var i=0;i<12;i++){var l=document.createElement('span');l.className='lf';l.textContent='🍃';l.style.left=Math.random()*100+'%';l.style.animationDuration=(8+Math.random()*10)+'s';l.style.animationDelay=(-Math.random()*14)+'s';h.appendChild(l)}})();
+// parallax
+$('top').addEventListener('mousemove',function(e){var x=(e.clientX/innerWidth-.5);$('h1').style.transform='translateX('+x*-14+'px)';$('h2').style.transform='translateX('+x*-30+'px)';$('h3').style.transform='translateX('+x*-50+'px)';$('sun').style.transform='translateX('+x*20+'px)'});
+// tabs
+var T=[
+['Okos alkalmazások','Az appok mérik, mennyi energiát fogyasztunk, segítenek a közlekedésben és csökkentik az ételpazarlást.','<svg viewBox="0 0 220 260"><rect x="50" y="10" width="120" height="240" rx="22" fill="#0d2a1b"/><rect x="60" y="30" width="100" height="200" rx="10" fill="#e6f7dc"/><path d="M75 190l25-35 20 20 30-50" stroke="#2a7a4b" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="110" cy="85" r="28" fill="#c9e86b"/><path d="M98 85l9 9 16-18" stroke="#0d2a1b" stroke-width="6" fill="none" stroke-linecap="round"/></svg>'],
+['Papírmentes iroda','Felhős dokumentumok, e-aláírás és online űrlapok: a papír helyett a képernyő viszi a munkát.','<svg viewBox="0 0 220 260"><rect x="25" y="50" width="170" height="110" rx="10" fill="#0d2a1b"/><rect x="34" y="59" width="152" height="92" rx="4" fill="#e6f7dc"/><rect x="10" y="165" width="200" height="12" rx="6" fill="#26412d"/><path d="M60 90h100M60 110h70M60 130h90" stroke="#2a7a4b" stroke-width="7" stroke-linecap="round"/><path d="M140 205c10-20 30-20 40 0" stroke="#c9e86b" stroke-width="8" fill="none" stroke-linecap="round"/></svg>'],
+['Fenntartható IT','Hosszabb eszközélettartam, energiatakarékos működés, felesleges adatok törlése.','<svg viewBox="0 0 220 260"><rect x="55" y="30" width="110" height="60" rx="8" fill="#0d2a1b"/><rect x="55" y="100" width="110" height="60" rx="8" fill="#0d2a1b"/><rect x="55" y="170" width="110" height="60" rx="8" fill="#0d2a1b"/><g fill="#c9e86b"><circle cx="75" cy="60" r="6"/><circle cx="75" cy="130" r="6"/><circle cx="75" cy="200" r="6"/></g><path d="M175 60c25 0 30 40 5 60" stroke="#2a7a4b" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M180 120l-14-4 6 14z" fill="#2a7a4b"/></svg>']];
+var tb=$('tabs');
+var E=[[['Too Good To Go','Megmentett ételcsomagok olcsón az étteremből vagy a boltból, így kevesebb étel kerül a kukába.'],['BKK Futár és MÁV app','Tömegközlekedés követése és jegyvásárlás, hogy ne kelljen autóval menni.'],['MOL Bubi','Budapesti közösségi kerékpár, rövid utakra autó helyett.'],['Google Home / okosotthon appok','Fűtés, világítás és konnektorok vezérlése, fogyasztás követése.'],['Forest','Fókuszálós app: ha nem nyúlsz a telefonhoz, virtuális fa nő, és a készítők valódi fát is ültetnek.']],[['Google Workspace és Microsoft 365','Közös dokumentumszerkesztés és felhős tárhely, nyomtatás nélkül.'],['Adobe Acrobat Sign és DocuSign','Elektronikus aláírás szerződésekhez és jóváhagyásokhoz.'],['Számlázz.hu','Elektronikus számlák kiállítása és küldése e-mailben.'],['Trello és Notion','Feladatok, jegyzetek és projektek digitális követése füzet helyett.'],['Ügyfélkapu és DÁP','Hivatalos ügyek online intézése papír beadványok nélkül.']],[['Ecosia','Keresőmotor, amely a bevételéből fákat ültet.'],['Back Market','Felújított telefonok, laptopok vásárlása új helyett.'],['iFixit','Javítási útmutatók, hogy ne kelljen azonnal lecserélni az eszközt.'],['Energiatakarékos mód','A beépített akkumulátor- és energiatakarékos beállítások csökkentik a fogyasztást.'],['Felhő takarítása','A régi fájlok és e-mailek törlése kevesebb tárhelyet és energiát igényel.']]];
+function show(i){[].forEach.call(tb.children,function(b,j){b.setAttribute('aria-selected',j==i)});$('panel').innerHTML='<div>'+T[i][2]+'</div><div><h3>'+T[i][0]+'</h3><p>'+T[i][1]+'</p><ul class="ex">'+E[i].map(function(e){return '<li><b>'+e[0]+'</b><span>'+e[1]+'</span></li>'}).join('')+'</ul></div>'}
+T.forEach(function(t,i){var b=document.createElement('button');b.setAttribute('role','tab');b.textContent=t[0];b.onclick=function(){show(i)};tb.appendChild(b)});show(0);
+// office toggle
+$('tg').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);$('off').classList.toggle('dig',on);$('s1').textContent=on?'~100 lap':'500 lap';$('s2').textContent=on?'0,5 kg':'2,5 kg'};
+// calculator
+var tr=$('trees');
+function tree(x,y,s){return '<g transform="translate('+x+' '+y+') scale('+s+')"><rect x="-4" y="-30" width="8" height="30" fill="#5a3a22"/><circle cy="-45" r="26" fill="#c9e86b"/><circle cx="-14" cy="-32" r="16" fill="#9bd36a"/></g>'}
+function calc(){var p=+$('pages').value,s=Math.round(p*.8*52),t=s/8000;$('pv').textContent=p;
+$('res').textContent=s+' lap évente, '+(s*5/1000).toFixed(1).replace('.',',')+' kg papír';
+var n=Math.min(5,Math.max(p>0?1:0,Math.round(t*8)));var h='';var pos=[[100,200,1.3],[50,205,.9],[150,205,.9],[25,208,.6],[175,208,.6]];for(var i=0;i<n;i++)h+=tree(pos[i][0],pos[i][1],pos[i][2]);tr.innerHTML=h}
+$('pages').oninput=calc;calc();
+// quiz
+var Q=[['Melyik a legjobb módja a dokumentumok biztonságos megosztásának papír nélkül?',['Kinyomtatni és szkennelni','Felhős tárhely megosztással','Faxon küldeni'],1,'A felhős megosztás nem igényel papírt, és követhető.'],
+['Mi csökkenti leginkább egy eszköz környezeti terhelését?',['Évente új telefon','Javítás és hosszabb használat','Mindig bekapcsolva hagyás'],1,'A gyártás okozza a legtöbb terhelést, ezért a hosszabb élettartam számít.'],
+['Mire jó az elektronikus aláírás?',['Papír nélküli jóváhagyás','Gyorsabb internet','Képszerkesztés'],0,'A szerződések és igazolások nyomtatás nélkül is érvényesek lehetnek.'],
+['Melyik zöld rendezvényszervezési ötlet?',['Papír meghívók százával','Online regisztráció és digitális program','Eldobható poharak'],1,'Az online regisztráció és program papírt és hulladékot spórol.']];
+function QQ(q,o,a,x,Eq,Eo,Ex){var h=[q,o,a,x];h.en=[Eq,Eo,a,Ex];Q.push(h)}
+QQ('Az e-hulladék nagyjából mekkora részét gyűjtik dokumentáltan újra?',['Kb. 22%','Kb. 70%','Majdnem az egészet'],0,'Az ENSZ szerint 2022-ben csak kb. 22% került dokumentált újrahasznosításra.','Roughly what share of e-waste is documented as recycled?',['About 22%','About 70%','Almost all of it'],'According to the UN, only about 22% was documented as recycled in 2022.');
+QQ('Mi a „felhő” valójában?',['Az égen tárolt adat','Adatközpontokban lévő szerverek','Egy műhold'],1,'A felhő valódi szerverekből áll, amelyek áramot használnak.','What is “the cloud” really?',['Data stored in the sky','Servers in data centres','A satellite'],'The cloud is made of real servers that use electricity.');
+QQ('Melyik lépés spórol energiát a digitális életben?',['Régi, felesleges fájlok és e-mailek törlése','Minden app futtatása a háttérben','Mindig maximális fényerő'],0,'Kevesebb tárolt adat kevesebb szerverterhelést jelent.','Which step saves energy in digital life?',['Deleting old, unneeded files and e-mails','Running every app in the background','Always maximum brightness'],'Less stored data means less server load.');
+QQ('Mi az ökológiai lábnyom?',['Az a terhelés, amit a tevékenységünk a környezetre rak','Egy cipőmárka','A lakás alapterülete'],0,'Megmutatja, mennyi természeti erőforrást használunk fel.','What is an ecological footprint?',['The pressure our activities put on the environment','A shoe brand','The floor area of a flat'],'It shows how many natural resources we use.');
+QQ('Melyik a legjobb választás egy iskolai kiselőadáshoz?',['Kinyomtatott 20 oldalas anyag','Megosztott online prezentáció','Új papírfólia minden diához'],1,'A megosztott online anyag papír nélkül is elérhető mindenkinek.','Which is the best choice for a school presentation?',['A printed 20-page handout','A shared online presentation','New paper foils for every slide'],'A shared online file reaches everyone without paper.');
+QQ('Hány A4 lapot ad kb. egy fa (becslés)?',['Kb. 80','Kb. 8 000','Kb. 8 000 000'],1,'Az oldalon használt becslés: 1 fa kb. 8 000 lap.','About how many A4 sheets does one tree give (estimate)?',['About 80','About 8,000','About 8,000,000'],'The estimate used on this site: 1 tree is about 8,000 sheets.');
+QQ('Mi a papírmentes iroda egyik előnye?',['Gyorsabb keresés és kevesebb hulladék','Több nyomtatópatron','Nagyobb iratszekrény'],0,'A digitális dokumentumokban keresni is könnyebb.','What is one advantage of a paperless office?',['Faster search and less waste','More printer cartridges','A bigger filing cabinet'],'Digital documents are also easier to search.');
+var qi=0,sc=0,qz=$('quiz');
+function ask(){if(qi>=Q.length){qz.innerHTML='<p class="q">Eredmény: '+sc+' / '+Q.length+'</p><p>'+(sc==Q.length?'Zöld szakértő vagy! 🌳':sc>=Q.length/2?'Szép munka, még pár trükk és profi leszel.':'Nézd át újra az oldalt, és próbáld újra!')+'</p><button class="btn" id="rs">Újra</button>';$('rs').onclick=function(){qi=0;sc=0;ask()};return}
+var q=Q[qi];if(q.en&&window.LANG==='en')q=q.en;qz.innerHTML='<p class="f" style="color:var(--muted)">'+(qi+1)+' / '+Q.length+'</p><p class="q">'+q[0]+'</p>'+q[1].map(function(o,i){return '<button class="opt" data-i="'+i+'">'+o+'</button>'}).join('')+'<p class="fb" id="fb"></p><button class="btn" id="nx" hidden>Tovább</button>';
+[].forEach.call(qz.querySelectorAll('.opt'),function(b){b.onclick=function(){var i=+b.dataset.i;[].forEach.call(qz.querySelectorAll('.opt'),function(x){x.disabled=true});b.classList.add(i==q[2]?'ok':'no');qz.querySelectorAll('.opt')[q[2]].classList.add('ok');if(i==q[2])sc++;$('fb').textContent=(i==q[2]?'Helyes! ':'Nem egészen. ')+q[3];$('nx').hidden=false}});
+$('nx').onclick=function(){qi++;ask()}}
+ask();
+// pledge
+var H=['Nem nyomtatok ki felesleges dokumentumot','Törlöm a régi fájlokat és e-maileket','Kikapcsolom az eszközöket, ha nem használom','Digitális jegyzetet használok','Javíttatok, nem cserélek azonnal','Megosztok egy tippet másoknak'];
+var ls=$('list');H.forEach(function(h,i){var l=document.createElement('label');l.innerHTML='<input type="checkbox"> '+h;l.firstChild.onchange=up;ls.appendChild(l)});
+function up(){var n=ls.querySelectorAll('input:checked').length,p=Math.round(n/H.length*100);$('ring').style.strokeDashoffset=314-314*p/100;$('pct').textContent=p+'%';$('msg').textContent=p==100?'Gratulálunk, zöld hős vagy! 🌍':''}
+(function(){
+var fine=matchMedia('(pointer:fine)').matches,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+var hero=$('top'),land=hero.querySelector('.land'),hin=hero.querySelector('.in');
+var pb=document.createElement('div');pb.className='pbar';document.body.appendChild(pb);
+function sc(){var y=scrollY,m=document.documentElement.scrollHeight-innerHeight;pb.style.width=(m>0?y/m*100:0)+'%';if(!rm&&y<innerHeight*1.3){land.style.transform='translateY('+y*.25+'px)';hin.style.transform='translateY('+y*-.18+'px)';hin.style.opacity=Math.max(0,1-y/(innerHeight*.8))}}
+addEventListener('scroll',sc,{passive:true});sc();
+if(rm)return;
+var els=document.querySelectorAll('section h2,.tabs,.panel,.office,.calc,.quiz,.chk,details,.gamebox,.chat');
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.12});els.forEach(function(el){el.classList.add('rv');io.observe(el)})}
+document.querySelectorAll('.panel,.office,.calc,.quiz,.chk').forEach(function(c){c.classList.add('tilt');c.addEventListener('mousemove',function(e){if(!fine)return;var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(900px) rotateY('+x*6+'deg) rotateX('+y*-6+'deg)'});c.addEventListener('mouseleave',function(){c.style.transform=''})});
+if(!fine)return;
+var sp=document.createElement('div');sp.className='spot';hero.appendChild(sp);
+hero.addEventListener('mousemove',function(e){var r=hero.getBoundingClientRect();sp.style.setProperty('--mx',(e.clientX-r.left)+'px');sp.style.setProperty('--my',(e.clientY-r.top)+'px')});
+
+var tx=-100,ty=-100,cx=-100,cy=-100,last=0,ch=['🍃','🌿','✨','🌱'];
+
+addEventListener('mousemove',function(e){var n=Date.now();if(n-last<70)return;last=n;var s=document.createElement('span');s.className='tr';s.textContent=ch[Math.floor(Math.random()*ch.length)];s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.style.setProperty('--dx',(Math.random()*50-25)+'px');document.body.appendChild(s);setTimeout(function(){s.remove()},900)});
+var wash=document.createElement('div');wash.className='wash';document.body.appendChild(wash);
+var hue=120,down=false,skip='input,button,summary,a,canvas,textarea';
+function setHue(h){hue=(h+360)%360;document.documentElement.style.setProperty('--wh',hue)}
+function pos(e){wash.style.setProperty('--wx',e.clientX+'px');wash.style.setProperty('--wy',e.clientY+'px')}
+function ripple(x,y){var r=document.createElement('span');r.className='rip';r.style.left=x+'px';r.style.top=y+'px';r.style.setProperty('--c','hsl('+hue+',85%,60%)');document.body.appendChild(r);setTimeout(function(){r.remove()},1100)}
+function blob(x,y){var b=document.createElement('span');b.className='blob';b.style.left=x+'px';b.style.top=y+'px';b.style.background='hsl('+((x/innerWidth*300+hue)%360)+',85%,60%)';document.body.appendChild(b);setTimeout(function(){b.remove()},1400)}
+document.addEventListener('mousedown',function(e){if(!document.body.classList.contains('rgb'))return;setHue(hue+55);pos(e);ripple(e.clientX,e.clientY);if(!e.target.closest(skip)){down=true;document.body.classList.add('drag')}});
+addEventListener('mouseup',function(){down=false;document.body.classList.remove('drag')});
+addEventListener('mousemove',function(e){if(!down||!document.body.classList.contains('rgb'))return;pos(e);setHue(hue+1.5);blob(e.clientX,e.clientY)});
+var b=hero.querySelector('.btn');b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();b.style.transform='translate('+(e.clientX-r.left-r.width/2)*.25+'px,'+(e.clientY-r.top-r.height/2)*.25+'px)'});b.addEventListener('mouseleave',function(){b.style.transform=''});
+})();
+(function(){
+var cv=$('gc'),c=cv.getContext('2d'),W=480,H=720,D=2,GH=90,PW=78,R=15,L=function(h,e){return window.LANG==='en'?e:h};
+cv.width=W*D;cv.height=H*D;c.scale(D,D);
+var st='idle',b,P,pt,sc,tc,nx,best=0,off=0,sh=0,ov=0,wg=0,T=0,mute=false,vis=true,last=0,tip=0,AC=null,ST=[];
+try{best=+localStorage.getItem('zbest')||0}catch(e){}
+for(var i=0;i<46;i++)ST.push([Math.random()*W,Math.random()*H*.6,Math.random()*1.6+.4,Math.random()*6]);
+var K=[[[110,200,245],[225,245,225]],[[255,140,95],[255,215,150]],[[14,22,60],[60,80,150]],[[120,150,220],[255,200,170]]];
+var TIPS=[['1 fa kb. 8 000 A4 lapot ad.','1 tree gives about 8,000 A4 sheets.'],['Az e-aláírás nyomtatás nélkül is érvényes lehet.','An e-signature can be valid without printing.'],['A régi fájlok törlése energiát spórol.','Deleting old files saves energy.']];
+function tone(f,d,ty,v,f2,dl){if(mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();var t=AC.currentTime+(dl||0),o=AC.createOscillator(),g=AC.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v||.1,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+function ui(){$('gs').textContent=sc;$('gb').textContent=best;$('gt').textContent=tc}
+function reset(){b={x:140,y:H/2-40,v:0};P=[];pt=[];sc=0;tc=0;nx=W+40;ui()}
+reset();
+function burst(x,y,n,col,sp){for(var i=0;i<n;i++){var a=Math.random()*6.28,s=(.3+Math.random())*sp;pt.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,c:col,s:2+Math.random()*4})}}
+function flap(){if(st==='over'){if(Date.now()-ov<700)return;reset();st='idle'}if(st==='idle'){st='play';tone(520,.1,'sine',.1,780)}b.v=-8.3;wg=1;tone(360,.1,'triangle',.1,700);burst(b.x-14,b.y+6,5,'255,255,255',1.5)}
+function gy(p){return p.gy+Math.sin(T*.03+p.ph)*p.amp}
+function spawn(){var g=Math.max(158,214-sc*2.2),m=g/2+75;P.push({x:nx,gy:m+Math.random()*(H-GH-2*m),gap:g,amp:sc>=8?Math.min(40,(sc-6)*4):0,ph:Math.random()*6,done:0,tree:Math.random()<.5,to:Math.random()<.5?-1:1});nx+=235}
+function die(){st='over';ov=Date.now();sh=14;tip=Math.floor(Math.random()*TIPS.length);burst(b.x,b.y,28,'255,120,90',3.4);tone(220,.3,'square',.12,60);tone(300,.5,'sawtooth',.08,80,.2);if(sc>best){best=sc;try{localStorage.setItem('zbest',best)}catch(e){}}ui()}
+function upd(dt){T+=dt;var sp=2.5+Math.min(sc*.07,2.4);off+=sp*dt*(st==='play'?1:.5);if(wg>0)wg-=.06*dt;if(sh>0)sh-=.8*dt;
+if(st==='idle')b.y=H/2-40+Math.sin(T*.08)*8;
+if(st==='play'){b.v+=.46*dt;b.y+=b.v*dt;if(b.y<14){b.y=14;b.v=0}if(T%3<dt)burst(b.x-16,b.y+4,1,'201,232,107',.5);
+nx-=sp*dt;if(nx<W+30)spawn();
+P.forEach(function(p){p.x-=sp*dt;var g=gy(p);
+if(!p.done&&p.x+PW<b.x){p.done=1;sc++;ui();tone(660,.1,'sine',.12);tone(990,.16,'sine',.12,0,.09)}
+if(p.tree&&!p.tk){var tx=p.x+PW/2,ty=g+p.to*(p.gap/2-34);if(Math.hypot(b.x-tx,b.y-ty)<30){p.tk=1;tc++;ui();burst(tx,ty,16,'120,230,140',2.6);[880,1100,1320,1760].forEach(function(f,i){tone(f,.14,'sine',.09,0,i*.06)})}}
+if(Math.abs(b.x-(p.x+PW/2))<PW/2+R-3&&(b.y-R+4<g-p.gap/2||b.y+R-4>g+p.gap/2))die()});
+P=P.filter(function(p){return p.x>-PW-40});if(b.y+R>H-GH){b.y=H-GH-R;die()}}
+pt.forEach(function(q){q.x+=q.vx*dt-(st==='play'?sp*.4*dt:0);q.y+=q.vy*dt;q.vy+=.04*dt;q.l-=.025*dt});pt=pt.filter(function(q){return q.l>0})}
+function mix(a,b,f){return Math.round(a+(b-a)*f)}
+function ry(base,amp,fq,k,x){var u=(x+off*k)*fq;return base-(Math.sin(u)+Math.sin(u*2.3)*.5)*amp}
+function ridge(base,amp,fq,k,col){c.fillStyle=col;c.beginPath();c.moveTo(0,H);for(var x=0;x<=W;x+=8)c.lineTo(x,ry(base,amp,fq,k,x));c.lineTo(W,H);c.fill()}
+function draw(){var ph=(sc/10)%4,i=Math.floor(ph),f=ph-i,e=f*f*(3-2*f),A=K[i],B=K[(i+1)%4],nt=Math.max(0,Math.min(1,1.4-Math.abs(ph-2.5)));
+c.save();if(sh>0)c.translate((Math.random()-.5)*sh,(Math.random()-.5)*sh);
+var g=c.createLinearGradient(0,0,0,H);for(var j=0;j<2;j++){g.addColorStop(j,'rgb('+[0,1,2].map(function(n){return mix(A[j][n],B[j][n],e)}).join(',')+')')}c.fillStyle=g;c.fillRect(-20,-20,W+40,H+40);
+ST.forEach(function(s){c.fillStyle='rgba(255,255,255,'+nt*(.5+.5*Math.sin(T*.05+s[3]))+')';c.fillRect(s[0],s[1],s[2],s[2])});
+var og=c.createRadialGradient(360,130,6,360,130,90);og.addColorStop(0,nt>.5?'rgba(240,240,255,.95)':'rgba(255,243,160,.95)');og.addColorStop(1,'rgba(255,243,160,0)');c.fillStyle=og;c.fillRect(260,30,200,200);
+var D1=nt*.8;function dk(d,n){return 'rgb('+[0,1,2].map(function(k){return mix(d[k],n[k],D1)}).join(',')+')'}
+ridge(470,70,.006,.12,dk([157,201,168],[28,47,85]));ridge(520,50,.009,.3,dk([95,174,124],[22,54,63]));
+for(var t=0;t<4;t++){var x=((t*190-off*.3)%760+760)%760-60,y=ry(520,50,.009,.3,x);c.strokeStyle=dk([240,240,240],[120,140,170]);c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y-52);c.stroke();for(var k=0;k<3;k++){var a=T*.07+k*2.094;c.beginPath();c.moveTo(x,y-52);c.lineTo(x+Math.cos(a)*26,y-52+Math.sin(a)*26);c.stroke()}}
+ridge(590,34,.014,.6,dk([45,138,88],[13,42,42]));
+P.forEach(function(p){var gg=gy(p),tp=gg-p.gap/2,bt=gg+p.gap/2;
+[[0,tp,0],[bt,H-GH,1]].forEach(function(r){var y0=r[0],y1=r[1],pg=c.createLinearGradient(p.x,0,p.x+PW,0);pg.addColorStop(0,'#fbf7ea');pg.addColorStop(1,'#cfc7ae');c.fillStyle=pg;c.fillRect(p.x,y0,PW,y1-y0);c.strokeStyle='rgba(0,0,0,.09)';c.lineWidth=1;for(var y=y0+(r[2]?9:0);y<y1;y+=9){c.beginPath();c.moveTo(p.x,y);c.lineTo(p.x+PW,y);c.stroke()}c.fillStyle='#b9b093';c.fillRect(p.x-5,r[2]?y0:y1-20,PW+10,20)});
+if(p.tree&&!p.tk){var tx=p.x+PW/2,ty=gg+p.to*(p.gap/2-34)+Math.sin(T*.1)*3;c.shadowColor='#8dffa8';c.shadowBlur=18;c.fillStyle='#7a4b2a';c.fillRect(tx-3,ty+4,6,13);c.fillStyle='#3fcf6d';c.beginPath();c.arc(tx,ty,13,0,6.3);c.fill();c.fillStyle='#8df0a0';c.beginPath();c.arc(tx-4,ty-4,5,0,6.3);c.fill();c.shadowBlur=0}});
+var gg2=c.createLinearGradient(0,H-GH,0,H);gg2.addColorStop(0,'#4aa35a');gg2.addColorStop(1,'#1f5a35');c.fillStyle=gg2;c.fillRect(0,H-GH,W,GH);c.fillStyle='rgba(255,255,255,.08)';for(var x=-(off%40);x<W;x+=40){c.beginPath();c.moveTo(x,H-GH);c.lineTo(x+20,H-GH);c.lineTo(x,H);c.lineTo(x-20,H);c.fill()}c.fillStyle='#8be07a';c.fillRect(0,H-GH,W,5);
+pt.forEach(function(q){c.fillStyle='rgba('+q.c+','+q.l+')';c.beginPath();c.arc(q.x,q.y,q.s*q.l,0,6.3);c.fill()});
+c.save();c.translate(b.x,b.y);c.rotate(Math.max(-.5,Math.min(1.1,b.v*.07)));c.shadowColor='rgba(201,232,107,.8)';c.shadowBlur=16;
+var bg=c.createLinearGradient(0,-14,0,14);bg.addColorStop(0,'#e8ff9a');bg.addColorStop(1,'#3fa86a');c.fillStyle=bg;c.beginPath();c.ellipse(0,0,18,14,0,0,6.3);c.fill();c.shadowBlur=0;
+c.fillStyle='#fff';c.beginPath();c.ellipse(3,5,10,6,0,0,6.3);c.fill();
+c.save();c.translate(-4,2);c.rotate(Math.sin(T*.5)*.5*(wg>0?1.6:.4)-.3);c.fillStyle='#2a7a4b';c.beginPath();c.ellipse(-8,0,13,6,0,0,6.3);c.fill();c.restore();
+c.fillStyle='#fff';c.beginPath();c.arc(8,-5,5,0,6.3);c.fill();c.fillStyle='#0d2a1b';c.beginPath();c.arc(9.5,-5,2.4,0,6.3);c.fill();
+c.fillStyle='#ff9a3c';c.beginPath();c.moveTo(15,-2);c.lineTo(26,2);c.lineTo(15,5);c.fill();c.fillStyle='#2a9d5c';c.beginPath();c.ellipse(-2,-14,3,6,-.5,0,6.3);c.fill();c.restore();
+c.fillStyle='rgba(5,10,40,'+nt*.3+')';c.fillRect(-20,-20,W+40,H+40);c.restore();
+c.textAlign='center';c.lineJoin='round';var F='800 64px "Bricolage Grotesque",system-ui,sans-serif';
+function pnl(y,h){c.fillStyle='rgba(8,24,16,.78)';c.beginPath();c.roundRect?c.roundRect(60,y,W-120,h,24):c.rect(60,y,W-120,h);c.fill();c.fillStyle='#fff'}
+if(st==='play'){c.font=F;c.lineWidth=8;c.strokeStyle='rgba(13,42,27,.7)';c.strokeText(sc,W/2,120);c.fillStyle='#fff';c.fillText(sc,W/2,120);c.font='800 22px system-ui,sans-serif';c.textAlign='left';c.fillText('🌳 '+tc,16,34);c.textAlign='center'}
+if(st==='idle'){pnl(200,170);c.font='800 40px "Bricolage Grotesque",system-ui,sans-serif';c.fillText(L('ZÖLD REPÜLÉS','GREEN FLIGHT'),W/2,255);c.font='20px system-ui,sans-serif';c.fillText(L('Koppints a kezdéshez','Tap to start'),W/2,295);c.font='15px system-ui,sans-serif';c.fillStyle='#c9e86b';c.fillText(L('Kerüld ki a papírhalmokat, gyűjtsd a fákat!','Dodge the paper stacks, collect the trees!'),W/2,335)}
+if(st==='over'){pnl(170,300);var md=sc>=30?'#ffd34d':sc>=15?'#c0c6cf':sc>=5?'#cd7f32':'#4b6455';c.fillStyle=md;c.beginPath();c.arc(W/2,235,32,0,6.3);c.fill();c.fillStyle='#0d2a1b';c.font='800 30px system-ui,sans-serif';c.fillText('★',W/2,246);c.fillStyle='#fff';c.font='800 34px "Bricolage Grotesque",system-ui,sans-serif';c.fillText(L('Vége a menetnek','Game over'),W/2,306);c.font='22px system-ui,sans-serif';c.fillText(L('Pont: ','Score: ')+sc+'   '+L('Rekord: ','Best: ')+best+'   🌳 '+tc,W/2,346);c.font='15px system-ui,sans-serif';c.fillStyle='#c9e86b';c.fillText(TIPS[tip][window.LANG==='en'?1:0],W/2,386);c.fillStyle='#fff';c.fillText(L('Koppints az újrakezdéshez','Tap to play again'),W/2,430)}}
+function frame(ts){requestAnimationFrame(frame);if(!vis){last=0;return}var dt=last?Math.min((ts-last)/16.667,2.2):1;last=ts;upd(dt);draw()}
+requestAnimationFrame(frame);
+if(window.IntersectionObserver)new IntersectionObserver(function(e){vis=e[0].isIntersecting}).observe(cv);
+cv.addEventListener('pointerdown',function(e){e.preventDefault();cv.focus({preventScroll:true});flap()});
+addEventListener('keydown',function(e){if((e.code==='Space'||e.code==='ArrowUp')&&vis&&(document.activeElement===cv||st==='play')){e.preventDefault();flap()}});
+$('gm').onclick=function(){mute=!mute;this.textContent=mute?'Hang: ki':'Hang: be'};
+$('gf').onclick=function(){var w=$('gwrap');if(document.fullscreenElement)document.exitFullscreen();else if(w.requestFullscreen)w.requestFullscreen().catch(function(){})};
+})();
+(function(){
+var log=$('log'),qi=$('qi'),qs=$('qs'),note=$('note'),sample=null,busy=false,hist=[];
+var INSTR='Te a 9.C osztály „Digitális megoldások a fenntartható életért” projektjének segítő asszisztense vagy. Magyarul válaszolj, barátságosan és röviden (legfeljebb 4 mondat). A témák: okos alkalmazások, digitális papírmentes iroda, fenntartható IT, zöld rendezvényszervezés, ökológiai lábnyom csökkentése. Ha a kérdés nem kapcsolódik ide, udvariasan tereld vissza a témára. Ha nem vagy biztos valamiben, mondd meg őszintén.';
+['Hogyan lehet papírmentes irodát működtetni?','Melyik app segít az ételpazarlás ellen?','Hogyan lehet zöld rendezvényt szervezni?','Mit tehetek az eszközeimmel a környezetért?'].forEach(function(q){var b=document.createElement('button');b.textContent=q;b.onclick=function(){qi.value=b.textContent;send()};$('chips').appendChild(b)});
+function add(cls,t){var d=document.createElement('div');d.className='m '+cls;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
+function ready(s){sample=s;if(!s){note.textContent='Az AI asszisztens ebben a nézetben most nem érhető el.';qi.disabled=true;qs.disabled=true}else note.textContent='Az AI hibázhat, fontos infót ellenőrizz máshol is.'}
+(window.claude&&claude.use?claude.use('sample'):Promise.resolve(null)).then(ready,function(){ready(null)});
+async function send(){var q=qi.value.trim();if(!q||busy||!sample)return;busy=true;qs.disabled=true;qi.value='';add('me',q);
+var bot=add('bot','Gondolkodom...');
+var p=INSTR+(window.LANG==='en'?' IMPORTANT: the user is reading the English version of the site, so answer in English.':'')+'\n\nEddigi beszélgetés:\n'+hist.slice(-6).join('\n')+'\n\nÚj kérdés: '+q;
+try{var r=await sample(p,{cache:false,onText:function(o){bot.textContent=o.text;log.scrollTop=log.scrollHeight}});bot.textContent=r.text;hist.push('Kérdés: '+q,'Válasz: '+r.text)}
+catch(e){bot.textContent=e&&e.code==='not_granted'?'Az AI használatához engedélyezned kell a kérést.':e&&e.code==='rate_limited'?'Túl sok kérdés, várj egy kicsit.':'Nem sikerült választ kapni, próbáld újra.'}
+busy=false;qs.disabled=false}
+qs.onclick=send;qi.addEventListener('keydown',function(e){if(e.key==='Enter')send()});
+})();
+(function(){var rb=document.getElementById('rgbb');rb.onclick=function(){var on=document.body.classList.toggle('rgb');rb.setAttribute('aria-pressed',on);if(!on)document.documentElement.style.setProperty('--wh',120)}})();
+(function(){
+var clamp=function(v,a,b){return Math.max(a,Math.min(b,v))},lerp=function(a,b,t){return a+(b-a)*t};
+var mx=0,my=0;addEventListener('mousemove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+var hero=$('top');
+for(var i=0;i<26;i++){var q=document.createElement('i');q.className='ff';q.style.left=Math.random()*100+'%';q.style.top=(30+Math.random()*60)+'%';q.style.animationDuration=(6+Math.random()*8)+'s';q.style.animationDelay=(-Math.random()*10)+'s';hero.appendChild(q)}
+var mega=$('mega');[].forEach.call(mega.children,function(s,i){s.style.setProperty('--i',i)});
+var C=[
+{t:'Okos alkalmazások',p:'Az appok mérik a fogyasztást, segítik a közlekedést és megmentik az ételt a kukától. A telefonod lehet a legjobb zöld eszközöd.',c:['Too Good To Go','BKK Futár','Forest'],w:'OKOS',bg:['#2a0f08','#8a3318']},
+{t:'Papírmentes iroda',p:'Felhős dokumentumok, e-aláírás és online űrlapok: a munka a képernyőn marad, a papír pedig a fán.',c:['Google Workspace','E-aláírás','Számlázz.hu'],w:'PAPÍR',bg:['#05202e','#0f6a8c']},
+{t:'Fenntartható IT',p:'Hosszabb eszközélettartam, kevesebb felesleges adat és energiatakarékos működés: a legzöldebb eszköz az, amit nem kell lecserélni.',c:['Ecosia','iFixit','Back Market'],w:'ZÖLD',bg:['#06200f','#2f8f4a']}];
+var chap=$('chap'),stick=chap.querySelector('.stick'),cw=$('cw'),cf=$('cf'),vt=$('vt'),ci=-1,bgs=[];
+C.forEach(function(d){var g=document.createElement('div');g.className='cbg';g.style.background='linear-gradient(135deg,'+d.bg[0]+','+d.bg[1]+')';stick.insertBefore(g,stick.firstChild);bgs.push(g)});
+function h(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt)e.textContent=txt;return e}
+function setChap(i){ci=i;var d=C[i];bgs.forEach(function(g,j){g.classList.toggle('on',j===i)});vt.textContent=d.w;
+cw.className='cwrap';cw.textContent='';cw.appendChild(h('div','cnum','0'+(i+1)+' / 03'));cw.appendChild(h('div','ctitle',d.t));cw.appendChild(h('p','',d.p));
+var ch=h('div','cchips');d.c.forEach(function(x){ch.appendChild(h('span','',x))});cw.appendChild(ch);void cw.offsetWidth;cw.className='cwrap swap'}
+// 3D
+var gl=false,T=window.THREE,R,sc,cam,U,grp,sh=[],PAL;
+try{if(T){R=new T.WebGLRenderer({canvas:$('gl'),alpha:true,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));sc=new T.Scene();cam=new T.PerspectiveCamera(35,1,.1,50);cam.position.z=9;
+U={t:{value:0},c1:{value:new T.Color()},c2:{value:new T.Color()},c3:{value:new T.Color()}};
+var mat=new T.ShaderMaterial({uniforms:U,
+vertexShader:'varying vec3 vN;varying vec3 vV;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}',
+fragmentShader:'precision highp float;uniform float t;uniform vec3 c1,c2,c3;varying vec3 vN;varying vec3 vV;void main(){vec3 n=normalize(vN),v=normalize(vV);float fr=pow(1.-max(dot(n,v),0.),2.4);float band=sin(n.x*3.2+n.y*4.+t*.8)*.5+.5;vec3 col=mix(c1,c2,band);col=mix(col,c3,fr*.9);vec3 L=normalize(vec3(.5,.8,.7));float sp=pow(max(dot(reflect(-L,n),v),0.),38.);float rim=pow(1.-max(dot(n,v),0.),5.);col+=sp*1.1+rim*.5;col*=.55+.6*max(dot(n,L),0.);gl_FragColor=vec4(col,1.);}'});
+var s=new T.Shape();s.moveTo(0,-2);s.bezierCurveTo(1.6,-1.2,1.8,1.2,0,2.4);s.bezierCurveTo(-1.8,1.2,-1.6,-1.2,0,-2);
+var geo=new T.ExtrudeGeometry(s,{depth:.5,bevelEnabled:true,bevelThickness:.35,bevelSize:.3,bevelSegments:8,curveSegments:32});geo.center();
+grp=new T.Group();grp.add(new T.Mesh(geo,mat));sc.add(grp);
+for(var k=0;k<8;k++){var m=new T.Mesh(new T.IcosahedronGeometry(.1+Math.random()*.14,0),mat);grp.add(m);sh.push(m)}
+var cl=function(a){return a.map(function(x){return new T.Color(x)})};
+PAL=[cl(['#2f9e5a','#c9e86b','#ffb347']),cl(['#ff5a36','#ffb347','#fff3a0']),cl(['#2e8fe0','#6fe3d0','#eafffb']),cl(['#1f8a4c','#c9e86b','#f4ffd0'])];
+gl=true}}catch(e){gl=false}
+function rs(){if(!gl)return;R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+var S={x:2.4,y:0,s:1,rz:0,op:0,ry:0,cp:0,u:0};
+requestAnimationFrame(function f(t){requestAnimationFrame(f);
+var ih=innerHeight,hp=clamp(scrollY/ih,0,1),r=chap.getBoundingClientRect(),cp=clamp(-r.top/(r.height-ih),0,1);
+mega.style.setProperty('--sp',hp.toFixed(3));mega.style.transform='perspective(1100px) rotateY('+(mx*16).toFixed(2)+'deg) rotateX('+(-my*10).toFixed(2)+'deg)';
+var idx=clamp(Math.floor(cp*3),0,2);if(idx!==ci)setChap(idx);
+cf.style.transform='scaleY('+cp.toFixed(3)+')';vt.style.translate='0 '+(my*-30).toFixed(1)+'px';
+if(!gl)return;
+var nw=innerWidth<800,b=clamp((ih*.9-r.top)/(ih*.6),0,1);
+var tx=lerp((nw?0:2.4)+hp*2+mx*1.2,(nw?0:3.1)+mx*.6,b),ty=lerp((nw?-1.4:0)-hp*2.5-my*.8,(nw?-2.3:0)-my*.5,b),ts=lerp(1,nw?.62:.95,b)*(nw?.72:1);
+var op=Math.max(1-clamp((hp-.55)/.45,0,1),b*clamp(r.bottom/ih,0,1));
+var tu=r.top>0?1-clamp(r.top/ih,0,1):1+cp*2;
+S.x+=(tx-S.x)*.08;S.y+=(ty-S.y)*.08;S.s+=(ts-S.s)*.08;S.op+=(op-S.op)*.12;S.cp+=(cp-S.cp)*.06;S.u+=(tu-S.u)*.08;S.ry+=.006+mx*.01;
+var cvs=$('gl');cvs.style.opacity=S.op.toFixed(3);if(S.op<.01)return;
+grp.position.set(S.x,S.y,0);grp.scale.setScalar(S.s*.62);grp.rotation.set(-my*.5+.15,S.ry+S.cp*Math.PI*3,Math.sin(t*.0005)*.15+hp*1.2);
+var i2=Math.min(2,Math.floor(S.u)),ff=S.u-i2;ff=ff*ff*(3-2*ff);
+for(var n=0;n<3;n++)U['c'+(n+1)].value.copy(PAL[i2][n]).lerp(PAL[i2+1][n],ff);
+sh.forEach(function(m,j){var a=t*.0006*(1+j*.15)+j*.8;m.position.set(Math.cos(a)*(2.4+j*.12),Math.sin(a*1.3)*1.6,Math.sin(a)*1.5);m.rotation.set(a,a*.7,0)});
+U.t.value=t*.001;R.render(sc,cam)});
+})();
+(function(){
+var b=document.body,ham=$('ham'),pv=$('v-project'),pl=$('v-lessons');
+function menu(o){b.classList.toggle('menu',o);ham.setAttribute('aria-expanded',o);$('drawer').setAttribute('aria-hidden',!o);if(o){var f=document.querySelector('.vbtn');if(f)f.focus({preventScroll:true})}}
+ham.onclick=function(){menu(!b.classList.contains('menu'))};
+$('dback').onclick=function(){menu(false)};
+addEventListener('keydown',function(e){if(e.key==='Escape'&&b.classList.contains('menu')){menu(false);ham.focus()}});
+function setView(v){var ls=v==='lessons',sj=v==='subjects',so=ls||sj;b.classList.toggle('vlessons',so);pv.hidden=so;pl.hidden=!ls;document.getElementById('v-subjects').hidden=!sj;[].forEach.call(document.querySelectorAll('.vbtn'),function(x){x.setAttribute('aria-pressed',x.dataset.view===v)});if(ls)rl(true)}
+[].forEach.call(document.querySelectorAll('.vbtn'),function(x){x.onclick=function(){var v=x.dataset.view;setView(v);try{location.hash=v==='project'?'top':v}catch(e){}scrollTo(0,0);menu(false)}});
+[].forEach.call(document.querySelectorAll('[data-lang]'),function(x){x.onclick=function(){setLang(x.dataset.lang)}});
+addEventListener('hashchange',function(){var hv=location.hash==='#lessons'?'lessons':location.hash==='#subjects'?'subjects':'project',ls=hv!=='project';setView(hv);if(!ls&&location.hash.length>1){var t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView()}});
+// tanórák
+var L=[{ty:0,m:45,t:'Bevezetés a fenntarthatóságba',g:'Megismerjük az ökológiai lábnyom fogalmát, és kitűzzük a projekt céljait.',k:['Közös ötletroham a táblán','Az ökológiai lábnyom kiszámolása online kalkulátorral','Csapatok és szerepek kiosztása']},
+{ty:2,m:45,t:'Okos alkalmazások vizsgálata',g:'Kipróbálunk néhány zöld appot, és értékeljük, mennyit segítenek.',k:['Három app kipróbálása párban','Értékelő táblázat kitöltése','Rövid beszámoló az osztálynak']},
+{ty:1,m:45,t:'Papírmentes iroda kutatás',g:'Megválaszoljuk, hogyan működhet papírmentes iroda, és milyen eszközök kellenek hozzá.',k:['Források keresése és jegyzetelés','Az első három kutatási kérdés megválaszolása','Összefoglaló vázlat készítése']},
+{ty:1,m:45,t:'Fenntartható IT',g:'Utánajárunk az eszközök élettartamának, az energiafogyasztásnak és a zöld adattárolásnak.',k:['Egy saját eszköz energiabeállításainak átnézése','Zöld rendezvényszervezés ötletei','Tippgyűjtemény a honlaphoz']},
+{ty:2,m:90,t:'Honlap és app prototípus',g:'Megtervezzük és elkészítjük a projekt honlapját és az app vázlatát.',k:['Oldalszerkezet és színek megtervezése','Tartalom feltöltése a honlapra','Az app képernyőterveinek megrajzolása']},
+{ty:3,m:45,t:'Kampány és bemutató',g:'Kampányt tervezünk, és bemutatjuk a végtermékeket az osztálynak.',k:['Kampányszlogen és poszter','Próbabemutató időzítéssel','Visszajelzés és értékelés']}];
+var TY=['Elmélet','Kutatás','Gyakorlat','Bemutató'],COL=['var(--sky)','var(--sun)','var(--coral)','var(--lime)'],done={},flt=-1,g=$('lgrid');
+function h(tag,cls,t){var e=document.createElement(tag);if(cls)e.className=cls;if(t)e.textContent=t;return e}
+function stats(){var n=0;for(var k in done)if(done[k])n++;$('ldone').textContent=n+' / '+L.length;$('lring').style.strokeDashoffset=251.3-251.3*n/L.length}
+function rl(anim){g.textContent='';L.forEach(function(d,i){if(flt>=0&&d.ty!==flt)return;var c=h('article','lc'+(done[i]?' done':''));c.style.setProperty('--tc',COL[d.ty]);if(anim)c.style.animationDelay=(i*.07)+'s';else c.style.animation='none';
+c.appendChild(h('div','no','0'+(i+1)));var m=h('div');m.appendChild(h('span','bd',TY[d.ty]));m.appendChild(h('span','mn',d.m+' perc'));c.appendChild(m);c.appendChild(h('h3','',d.t));c.appendChild(h('p','',d.g));
+var dt=h('details');dt.appendChild(h('summary','','Feladatok'));var ul=h('ul');d.k.forEach(function(x){ul.appendChild(h('li','',x))});dt.appendChild(ul);c.appendChild(dt);
+var bt=h('button','gbtn',done[i]?'Kész':'Jelölés késznek');bt.setAttribute('aria-pressed',!!done[i]);bt.onclick=function(){done[i]=!done[i];rl(false);stats()};c.appendChild(bt);g.appendChild(c)})}
+var ch=$('lchips');['Mind'].concat(TY).forEach(function(n,i){var bt=h('button','',n);bt.setAttribute('aria-pressed',i===0);bt.onclick=function(){flt=i-1;[].forEach.call(ch.children,function(x,j){x.setAttribute('aria-pressed',j===i)});rl(true)};ch.appendChild(bt)});
+rl(true);stats();
+var secs=2700,iv=null,tm=$('tm'),ts=$('ts');
+function pad(n){return n<10?'0'+n:''+n}function show(){tm.textContent=pad(Math.floor(secs/60))+':'+pad(secs%60)}
+ts.onclick=function(){if(iv){clearInterval(iv);iv=null;ts.textContent='Indítás';return}if(secs<=0)secs=2700;$('tn').textContent='';ts.textContent='Szünet';iv=setInterval(function(){secs--;show();if(secs<=0){clearInterval(iv);iv=null;ts.textContent='Indítás';$('tn').textContent='Lejárt az idő!'}},1000)};
+$('trs').onclick=function(){clearInterval(iv);iv=null;secs=2700;show();ts.textContent='Indítás';$('tn').textContent=''};
+if(location.hash==='#lessons')setView('lessons');if(location.hash==='#subjects')setView('subjects');
+})();
+</script>
+<script>
+(function(){
+var L=function(h,e){return window.LANG==='en'?e:h},g=function(i){return document.getElementById(i)};
+var F=[['62 M t','62 M t','Az ENSZ becslése szerint 2022-ben ennyi e-hulladék keletkezett a világon.','The UN estimated this much e-waste was generated worldwide in 2022.','#ff7a59'],
+['~22%','~22%','Az e-hulladéknak ekkora részét gyűjtötték dokumentáltan újra.','This share of e-waste was documented as recycled.','#3fa9e0'],
+['2–4%','2–4%','A digitális technológia becsült részesedése az üvegházgáz-kibocsátásból.','Estimated share of greenhouse gas emissions from digital technology.','#ffb347'],
+['1–1,5%','1–1.5%','Az adatközpontok a világ áramfogyasztásának nagyjából ekkora részét használják (IEA).','Data centres use roughly this share of global electricity (IEA).','#2a7a4b'],
+['~4 g CO₂','~4 g CO₂','Egy sima e-mail becsült kibocsátása; a nagy csatolmányé sokszorosa lehet.','Estimated footprint of a plain e-mail; a large attachment can be many times more.','#a06bff'],
+['70–80%','70–80%','Egy okostelefon élete során a kibocsátás nagy része a gyártásból ered, ezért a hosszabb használat számít.','Most of a smartphone’s lifetime emissions come from making it, so longer use matters.','#2a8fa6']];
+var S=[['Informatika','Computer science','Digitális eszközök, felhő, e-aláírás és kisalkalmazások készítése.','Digital tools, cloud storage, e-signatures and building small apps.','#7fd19b'],
+['Biológia','Biology','Az ökoszisztémák, az erdők és az emberi tevékenység hatásainak megértése.','Understanding ecosystems, forests and the impact of human activity.','#c9e86b'],
+['Földrajz','Geography','Erőforrások, éghajlatváltozás és a globális e-hulladék útja.','Resources, climate change and the global journey of e-waste.','#3fa9e0'],
+['Kémia','Chemistry','A papírgyártás, az akkumulátorok és az újrahasznosítás folyamatai.','Paper production, batteries and recycling processes.','#ffb347'],
+['Fizika','Physics','Energia, teljesítmény és az eszközök fogyasztásának számolása.','Energy, power and calculating how much devices consume.','#ff7a59'],
+['Matematika','Mathematics','Százalékok, arányok és a kalkulátor számításai, adatok ábrázolása.','Percentages, ratios, the calculator’s maths and charting data.','#a06bff'],
+['Magyar nyelv és irodalom','Hungarian language and literature','Meggyőző szöveg, kiselőadás és világos, érthető fogalmazás.','Persuasive writing, short talks and clear, understandable wording.','#2a8fa6'],
+['Angol nyelv','English language','Nemzetközi források olvasása és az oldal angol változata.','Reading international sources and the English version of the site.','#ff9ec4']];
+function render(){var f=g('facts'),s=g('sgrid');
+if(f)f.innerHTML=F.map(function(x){return '<div class="fc" style="--tc:'+x[4]+'"><b>'+L(x[0],x[1])+'</b><p>'+L(x[2],x[3])+'</p></div>'}).join('');
+if(s)s.innerHTML=S.map(function(x,i){return '<article class="lc" style="--tc:'+x[4]+'"><span class="no">0'+(i+1)+'</span><h3>'+L(x[0],x[1])+'</h3><p>'+L(x[2],x[3])+'</p></article>'}).join('')}
+render();
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+})();
+</script>
+</body>
+</html>
